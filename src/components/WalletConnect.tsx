@@ -5,7 +5,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useBalance, useDisconnect } from "wagmi";
 import { FaCopy, FaSignOutAlt, FaExternalLinkAlt, FaChevronDown, FaWallet, FaExclamationTriangle } from "react-icons/fa";
 import { formatEther } from "viem";
-import { monadTestnet } from "@/app/config/chains";
+import { monadTestnet, monadMainnet } from "@/app/config/chains";
 import { colors } from "@/theme";
 import { useToast } from "@/hooks/useToast";
 
@@ -39,8 +39,11 @@ export function WalletConnect() {
     setIsDropdownOpen(false);
   };
 
-  const viewOnExplorer = (address: string) => {
-    window.open(`${monadTestnet.blockExplorers.default.url}/address/${address}`, "_blank");
+  const viewOnExplorer = (address: string, chainId?: number) => {
+    const explorerUrl = chainId === monadMainnet.id 
+      ? monadMainnet.blockExplorers.default.url 
+      : monadTestnet.blockExplorers.default.url;
+    window.open(`${explorerUrl}/address/${address}`, "_blank");
     setIsDropdownOpen(false);
   };
 
@@ -64,8 +67,8 @@ export function WalletConnect() {
       address: account?.address as `0x${string}` | undefined,
     });
 
-    // Check if wallet is connected to the correct chain
-    const isCorrectChain = chain?.id === monadTestnet.id;
+    // Check if wallet is connected to a supported chain
+    const isCorrectChain = chain?.id === monadTestnet.id || chain?.id === monadMainnet.id;
 
     return (
       <div className="relative" ref={dropdownRef}>
@@ -148,7 +151,7 @@ export function WalletConnect() {
                   className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-yellow-400 hover:bg-yellow-400/10 transition-colors mb-2 border border-yellow-500/30"
                 >
                   <FaExclamationTriangle className="h-4 w-4" />
-                  <span>Switch to Monad Testnet</span>
+                  <span>Switch Network</span>
                 </button>
               )}
               <button
@@ -159,7 +162,7 @@ export function WalletConnect() {
                 <span>Copy Address</span>
               </button>
               <button
-                onClick={() => account.address && viewOnExplorer(account.address)}
+                onClick={() => account.address && viewOnExplorer(account.address, chain?.id)}
                 className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-white/10 transition-colors"
               >
                 <FaExternalLinkAlt className="h-4 w-4 text-gray-400" />
@@ -254,7 +257,7 @@ export function WalletConnect() {
                         <div className="flex-1">
                           <div className="text-xs font-semibold text-yellow-500 mb-1">Wrong Network</div>
                           <div className="text-xs text-yellow-400/80 mb-2">
-                            Please switch to Monad Testnet to continue.
+                            Please switch to Monad Testnet or Monad Mainnet to continue.
                           </div>
                           <button
                             onClick={openChainModal}

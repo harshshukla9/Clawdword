@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { createConfig } from "wagmi";
 import { http } from "viem";
-import { monadTestnet } from "@/app/config/chains";
+import { monadTestnet, monadMainnet } from "@/app/config/chains";
 import { createStorage } from "wagmi";
 import { injected } from "wagmi/connectors";
 
@@ -15,9 +15,10 @@ import { rainbowKitTheme } from "@/theme";
 
 
 const config = createConfig({
-  chains: [monadTestnet],
+  chains: [monadTestnet, monadMainnet],
   transports: {
     [monadTestnet.id]: http(),
+    [monadMainnet.id]: http(),
   },
   storage: createStorage({
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
