@@ -1,20 +1,21 @@
-# 🧠 Word Play – A Farcaster-Integrated Word Guessing Web3 Game
+# 🧠 Let's HaVE a WORD – A Competitive Word Guessing Web3 Game
 
-Welcome to **Word Play** — a fun, strategic, and competitive word-guessing game where your **MON** tokens fuel the thrill!  
-Guess the word, beat the clock, and multiply your stake the faster you win. 🚀
+Welcome to **Let's HaVE a WORD** — a fun, strategic, and competitive word-guessing game where your **MON** tokens fuel the thrill!  
+Guess the secret word, compete with others, and win the jackpot! 🚀
 
 ---
 
 ## 🎯 Overview
 
-**Word Play** is a brain-boosting game where players stake **MON tokens** to participate.  
-You’ll be given a **five-letter word** to guess, and your rewards depend on how **fast** and **accurately** you guess.
+**Let's HaVE a WORD** is a brain-boosting competitive game where players compete to guess the same secret word.  
+The first person to find the correct word wins the jackpot prize pool!
 
 **Key Features:**
 - Fully playable and working **Web3 game**.
-- Built with **Farcaster integration** for social sharing.
-- **On-chain** reward system powered by MON.
+- **Competitive gameplay** - everyone hunts the same secret word.
+- **On-chain** reward system powered by MON tokens.
 - Deployed on **Monad Testnet** with minimal off-chain dependency.
+- **Agent system** for automated gameplay.
 
 ---
 
@@ -30,33 +31,49 @@ You’ll be given a **five-letter word** to guess, and your rewards depend on ho
 1. **Connect Your Wallet**  
    - Connect your Web3 wallet to start playing.
 
-2. **Deposit MON**  
-   - Deposit MON tokens and click **"Start Play"**.
+2. **Start Guessing**  
+   - You get **1 free guess per day**.
+   - Additional guesses can be earned or purchased.
 
-3. **Guess the Word**  
-   - You’ll be given a **five-letter word** to guess.
-   - Use the fewest moves possible to guess correctly.
+3. **Guess the Secret Word**  
+   - Everyone is hunting the **same secret word**.
+   - Enter your 5-letter word guess.
+   - You have up to **6 guesses** per round.
 
-4. **Earn Rewards**  
-   - The **faster** your guess and the **fewer mistakes** you make, the **higher your multiplier**.
+4. **Win the Jackpot**  
+   - The **first person** to find the correct word wins the entire prize pool!
 
-5. **Color Hints**  
-   - 🟩 **Green** → Correct letter in the correct position.  
-   - 🟨 **Yellow** → Correct letter but in the wrong position.  
-
-6. **Share Your Win**  
-   - After the game, share your victory with friends on **Farcaster 🚀**.
+5. **Track Your Progress**  
+   - Monitor the prize pool, round number, and your agent balance.
+   - See how many agents are competing on the board.
 
 ---
 
-## 📜 Rules
+## 📜 Game Rules
+
+### Core Mechanics
+
+- **Everyone hunts the same secret word** - The first person to find it wins the jackpot.
+- **1 free guess per day** - Additional guesses can be earned or purchased.
+- **Every incorrect guess helps everyone** - When you guess incorrectly, that word is removed from play for all players.
+- **Word Status Indicators:**
+  - **Red words** - Have already been guessed (incorrect).
+  - **Black/Green words** - Can still win (not yet guessed or correct).
+
+### Gameplay Details
 
 - You must **connect your wallet** before playing.
-- MON stake is required to start a round.
-- Rewards are calculated based on:
-  - Time taken to guess.
-  - Number of correct guesses before losing moves.
-- Higher speed = Higher multiplier.
+- Each round has a **prize pool** that accumulates from player participation.
+- You have a maximum of **6 guesses** per round.
+- The game tracks **Global Guessees**, **Prize Pool**, **Round Number**, and **Agents on Board**.
+- Your **Agent Balance** shows your available MON tokens.
+- **Total Profit** tracks your winnings across all rounds.
+
+### Winning
+
+- The first player to guess the correct secret word wins the entire prize pool for that round.
+- All players benefit from incorrect guesses as they eliminate possibilities.
+- Strategy matters - use the information from previous guesses to narrow down the answer!
 
 ---
 
@@ -81,7 +98,5 @@ This repository contains:
 
 ## 📬 Connect
 
-If you enjoy **Word Play**, share your feedback or connect with us via Farcaster.  
-Let’s make brain games fun & rewarding! 🎉
-
-# Let-s-Have-a-Word
+If you enjoy **Let's HaVE a WORD**, share your feedback or connect with us via Farcaster.  
+Let's make brain games fun & rewarding! 🎉
