@@ -8,15 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@farcaster/frame-sdk':
-        specifier: ^0.0.38
-        version: 0.0.38(typescript@5.9.3)(zod@3.25.76)
-      '@farcaster/frame-wagmi-connector':
-        specifier: ^0.0.26
-        version: 0.0.26(@farcaster/frame-sdk@0.0.38(typescript@5.9.3)(zod@3.25.76))(@wagmi/core@2.22.1(@tanstack/query-core@5.90.20)(@types/react@19.2.13)(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@farcaster/miniapp-sdk':
-        specifier: ^0.1.8
-        version: 0.1.10(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@rainbow-me/rainbowkit':
         specifier: ^2.1.3
         version: 2.2.10(@tanstack/react-query@5.90.20(react@19.2.4))(@types/react@19.2.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)(viem@2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(wagmi@2.19.5(@tanstack/query-core@5.90.20)(@tanstack/react-query@5.90.20(react@19.2.4))(@types/react@19.2.13)(bufferutil@4.1.0)(react@19.2.4)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76))
@@ -44,9 +35,6 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.4(react@19.2.4)
-      react-hot-toast:
-        specifier: ^2.5.2
-        version: 2.6.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-icons:
         specifier: ^5.5.0
         version: 5.5.0(react@19.2.4)
@@ -277,30 +265,6 @@ packages:
 
   '@ethersproject/wordlists@5.8.0':
     resolution: {integrity: sha512-2df9bbXicZws2Sb5S6ET493uJ0Z84Fjr3pC4tu/qlnZERibZCeUVuqdtt+7Tv9xxhUxHoIekIA7avrKUWHrezg==}
-
-  '@farcaster/frame-core@0.0.34':
-    resolution: {integrity: sha512-hohopBJo9TH5C4M+3WzcvpWfuJ6bMXyqSx4gP1AvRT3F3MxHf0qCakicV4wiR3SM9FfPNcCjUcK3wSM+WzsDjA==}
-
-  '@farcaster/frame-sdk@0.0.38':
-    resolution: {integrity: sha512-CGrxO7Mv+Bs7QexEqkE5YbRw7eAiUwOefU1eqbHZ5JhjGlSHaCfIq3Lm8MMcWqBb7CyDVEYFDQkUWw0hjlrzTQ==}
-
-  '@farcaster/frame-wagmi-connector@0.0.26':
-    resolution: {integrity: sha512-tikJZS2U5OnyAzlmS9B185TdGl3q7dLc9nB7ms1hcFDFs7WB5e/0WY+IKQw/h4fZRf/56beBiBg5Abo8sNbchw==}
-    peerDependencies:
-      '@farcaster/frame-sdk': ^0.0.38
-      '@wagmi/core': ^2.14.1
-      viem: ^2.21.55
-
-  '@farcaster/miniapp-core@0.3.9':
-    resolution: {integrity: sha512-7k2AHYycFABUEQFHGqsuZr6P6UQOE2WO4/Qj/kQ1ydKA8QjrWxO4HjiPfnTdvqH0xOKtdavbFOV5lK5bDLkemw==}
-
-  '@farcaster/miniapp-sdk@0.1.10':
-    resolution: {integrity: sha512-ueoEAH3N7hIrV+L9pXdLJZpOY1GsOuwKN7MckouSEWY98H5A7KVajyGmGSDDVzjRWpu7Vndu4NZUHoOhF4nTOA==}
-
-  '@farcaster/quick-auth@0.0.6':
-    resolution: {integrity: sha512-tiZndhpfDtEhaKlkmS5cVDuS+A/tafqZT3y9I44rC69m3beJok6e8dIH2JhxVy3EvOWTyTBnrmNn6GOOh+qK6A==}
-    peerDependencies:
-      typescript: 5.8.3
 
   '@gemini-wallet/core@0.3.2':
     resolution: {integrity: sha512-Z4aHi3ECFf5oWYWM3F1rW83GJfB9OvhBYPTmb5q+VyK3uvzvS48lwo+jwh2eOoCRWEuT/crpb9Vwp2QaS5JqgQ==}
@@ -1866,9 +1830,6 @@ packages:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
     engines: {node: '>= 0.8'}
 
-  comlink@4.4.2:
-    resolution: {integrity: sha512-OxGdvBmJuNKSCMO4NTl1L47VRp6xn2wG4F/2hYzB6tiCb709otOxtEYCSvK80PtjODfXXZu8ds+Nw5kVCjqd2g==}
-
   commander@14.0.2:
     resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
     engines: {node: '>=20'}
@@ -2441,11 +2402,6 @@ packages:
     resolution: {integrity: sha512-DpLKbNU4WylpxJykQujfCcwYWiV/Jhm50Goo0wrVILAv5jOr9d+H+UR3PhSCD2rCCEIg0uc+G+muBTwD54JhDQ==}
     engines: {node: '>= 0.4'}
 
-  goober@2.1.18:
-    resolution: {integrity: sha512-2vFqsaDVIT9Gz7N6kAL++pLpp41l3PfDuusHcjnGLfR6+huZkl6ziX+zgVC3ZxpqWhzH6pyDdGrCeDhMIvwaxw==}
-    peerDependencies:
-      csstype: ^3.0.10
-
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
@@ -2692,9 +2648,6 @@ packages:
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
-
-  jose@5.10.0:
-    resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
 
   jose@6.1.3:
     resolution: {integrity: sha512-0TpaTfihd4QMNwrz/ob2Bp7X04yuxJkjRGi4aKmOqwhov54i6u79oCv7T+C7lo70MKH6BesI3vscD1yb/yzKXQ==}
@@ -3103,14 +3056,6 @@ packages:
       typescript:
         optional: true
 
-  ox@0.4.4:
-    resolution: {integrity: sha512-oJPEeCDs9iNiPs6J0rTx+Y0KGeCGyCAA3zo94yZhm8G5WpOxrwUtn2Ie/Y8IyARSqqY/j9JTKA3Fc1xs1DvFnw==}
-    peerDependencies:
-      typescript: '>=5.4.0'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   ox@0.6.7:
     resolution: {integrity: sha512-17Gk/eFsFRAZ80p5eKqv89a57uXjd3NgIf1CaXojATPBuujVc/fQSVhBeAU9JCRB+k7J50WQAyWTxK19T9GgbA==}
     peerDependencies:
@@ -3316,13 +3261,6 @@ packages:
     resolution: {integrity: sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==}
     peerDependencies:
       react: ^19.2.4
-
-  react-hot-toast@2.6.0:
-    resolution: {integrity: sha512-bH+2EBMZ4sdyou/DPrfgIouFpcRLCJ+HoCA32UoAYHn6T3Ur5yfcDCeSr5mwldl6pFOsiocmrXMuoCJ1vV8bWg==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
 
   react-icons@5.5.0:
     resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
@@ -4507,60 +4445,6 @@ snapshots:
       '@ethersproject/logger': 5.8.0
       '@ethersproject/properties': 5.8.0
       '@ethersproject/strings': 5.8.0
-
-  '@farcaster/frame-core@0.0.34(typescript@5.9.3)':
-    dependencies:
-      ox: 0.4.4(typescript@5.9.3)(zod@3.25.76)
-      zod: 3.25.76
-    transitivePeerDependencies:
-      - typescript
-
-  '@farcaster/frame-sdk@0.0.38(typescript@5.9.3)(zod@3.25.76)':
-    dependencies:
-      '@farcaster/frame-core': 0.0.34(typescript@5.9.3)
-      comlink: 4.4.2
-      eventemitter3: 5.0.4
-      ox: 0.4.4(typescript@5.9.3)(zod@3.25.76)
-    transitivePeerDependencies:
-      - typescript
-      - zod
-
-  '@farcaster/frame-wagmi-connector@0.0.26(@farcaster/frame-sdk@0.0.38(typescript@5.9.3)(zod@3.25.76))(@wagmi/core@2.22.1(@tanstack/query-core@5.90.20)(@types/react@19.2.13)(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
-    dependencies:
-      '@farcaster/frame-sdk': 0.0.38(typescript@5.9.3)(zod@3.25.76)
-      '@wagmi/core': 2.22.1(@tanstack/query-core@5.90.20)(@types/react@19.2.13)(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      viem: 2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-
-  '@farcaster/miniapp-core@0.3.9(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)':
-    dependencies:
-      '@solana/web3.js': 1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
-      ox: 0.4.4(typescript@5.9.3)(zod@3.25.76)
-      zod: 3.25.76
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - typescript
-      - utf-8-validate
-
-  '@farcaster/miniapp-sdk@0.1.10(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)':
-    dependencies:
-      '@farcaster/miniapp-core': 0.3.9(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
-      '@farcaster/quick-auth': 0.0.6(typescript@5.9.3)
-      comlink: 4.4.2
-      eventemitter3: 5.0.4
-      ox: 0.4.4(typescript@5.9.3)(zod@3.25.76)
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - typescript
-      - utf-8-validate
-      - zod
-
-  '@farcaster/quick-auth@0.0.6(typescript@5.9.3)':
-    dependencies:
-      jose: 5.10.0
-      typescript: 5.9.3
-      zod: 3.25.76
 
   '@gemini-wallet/core@0.3.2(viem@2.45.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
     dependencies:
@@ -6998,8 +6882,6 @@ snapshots:
     dependencies:
       delayed-stream: 1.0.0
 
-  comlink@4.4.2: {}
-
   commander@14.0.2: {}
 
   commander@14.0.3: {}
@@ -7733,10 +7615,6 @@ snapshots:
       define-properties: 1.2.1
       gopd: 1.2.0
 
-  goober@2.1.18(csstype@3.2.3):
-    dependencies:
-      csstype: 3.2.3
-
   gopd@1.2.0: {}
 
   graceful-fs@4.2.11: {}
@@ -7992,8 +7870,6 @@ snapshots:
       - utf-8-validate
 
   jiti@2.6.1: {}
-
-  jose@5.10.0: {}
 
   jose@6.1.3: {}
 
@@ -8373,20 +8249,6 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
-  ox@0.4.4(typescript@5.9.3)(zod@3.25.76):
-    dependencies:
-      '@adraffy/ens-normalize': 1.11.1
-      '@noble/curves': 1.9.7
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)(zod@3.25.76)
-      eventemitter3: 5.0.1
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - zod
-
   ox@0.6.7(typescript@5.9.3)(zod@3.25.76):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
@@ -8600,13 +8462,6 @@ snapshots:
     dependencies:
       react: 19.2.4
       scheduler: 0.27.0
-
-  react-hot-toast@2.6.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
-    dependencies:
-      csstype: 3.2.3
-      goober: 2.1.18(csstype@3.2.3)
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
 
   react-icons@5.5.0(react@19.2.4):
     dependencies:
