@@ -14,14 +14,24 @@ export const colors = {
   background: "#000000",
   foreground: "#ffffff",
   
-  // Brand colors
-  somniaPurple: "#876dff",
-  monadPurple: "#876dff", // Alias for backward compatibility
+  // Brand colors - Red hacker theme
+  somniaPurple: "#ff0040", // Bright red
+  monadPurple: "#ff0040", // Alias for backward compatibility
+  hackerRed: "#ff0040",
+  hackerRedDark: "#cc0033",
+  hackerRedLight: "#ff3366",
+  hackerRedGlow: "#ff0040",
   
-  // UI colors
-  cardBg: "#121212",
-  cardBorder: "#262626",
-  muted: "#a1a1aa",
+  // UI colors - Dark with red accents
+  cardBg: "#0a0a0a",
+  cardBorder: "#1a0000",
+  cardBorderGlow: "#ff0040",
+  muted: "#666666",
+  textSecondary: "#999999",
+  
+  // Cyberpunk accents
+  cyberBlue: "#00d4ff",
+  cyberGreen: "#00ff41",
 } as const;
 
 // ============================================================================
@@ -29,7 +39,7 @@ export const colors = {
 // ============================================================================
 
 export const rainbowKitTheme = {
-  accentColor: colors.somniaPurple,
+  accentColor: colors.hackerRed,
   accentColorForeground: "white",
   borderRadius: "large" as const,
   fontStack: "system" as const,
@@ -45,9 +55,17 @@ export const cssVariables = {
   "--foreground": colors.foreground,
   "--somnia-purple": colors.somniaPurple,
   "--monad-purple": colors.monadPurple,
+  "--hacker-red": colors.hackerRed,
+  "--hacker-red-dark": colors.hackerRedDark,
+  "--hacker-red-light": colors.hackerRedLight,
+  "--hacker-red-glow": colors.hackerRedGlow,
   "--card-bg": colors.cardBg,
   "--card-border": colors.cardBorder,
+  "--card-border-glow": colors.cardBorderGlow,
   "--muted": colors.muted,
+  "--text-secondary": colors.textSecondary,
+  "--cyber-blue": colors.cyberBlue,
+  "--cyber-green": colors.cyberGreen,
 } as const;
 
 // ============================================================================

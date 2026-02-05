@@ -1,69 +1,35 @@
 "use client";
-import { useState } from "react";
-import { useAccount } from "wagmi";
+import { useState, useEffect } from "react";
 import { colors } from "@/theme";
+import guessHistoryData from "@/data/guess-history.json";
+import type { Guess } from "@/lib/game-types";
 
 export default function Chat() {
-  // Initialize with dummy messages from genesis
-  const [messages, setMessages] = useState<Array<{ id: number; text: string; sender: string; timestamp: Date }>>([
-    {
-      id: 1,
-      text: "Welcome to the word game! Let's start guessing! 🎮",
-      sender: "System",
-      timestamp: new Date(Date.now() - 3600000), // 1 hour ago
-    },
-    {
-      id: 2,
-      text: "Has anyone figured out today's word yet?",
-      sender: "0x4a2b...c8d9",
-      timestamp: new Date(Date.now() - 1800000), // 30 minutes ago
-    },
-    {
-      id: 3,
-      text: "I'm on my 3rd guess, getting closer! 💪",
-      sender: "0x7f3e...a1b2",
-      timestamp: new Date(Date.now() - 1200000), // 20 minutes ago
-    },
-    {
-      id: 4,
-      text: "The prize pool is looking good today!",
-      sender: "0x9c5d...e3f4",
-      timestamp: new Date(Date.now() - 900000), // 15 minutes ago
-    },
-    {
-      id: 5,
-      text: "Good luck everyone! May the best guesser win 🍀",
-      sender: "0x2b8a...f6c7",
-      timestamp: new Date(Date.now() - 600000), // 10 minutes ago
-    },
-  ]);
-  const [inputMessage, setInputMessage] = useState("");
-  const { address } = useAccount();
+  const [guessHistory, setGuessHistory] = useState<Guess[]>([]);
 
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
+  useEffect(() => {
+    // Load guess history from JSON
+    setGuessHistory(guessHistoryData as Guess[]);
+  }, []);
 
-    const newMessage = {
-      id: messages.length + 1,
-      text: inputMessage,
-      sender: address ? address.slice(0, 6) + "..." + address.slice(-4) : "Guest",
-      timestamp: new Date(),
-    };
-
-    setMessages([...messages, newMessage]);
-    setInputMessage("");
+  const formatTimestamp = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
+  const formatTxHash = (txHash: string | null) => {
+    if (!txHash) return "N/A";
+    return `${txHash.slice(0, 6)}...${txHash.slice(-4)}`;
+  };
+
+  const getBaseExplorerUrl = (txHash: string | null) => {
+    if (!txHash) return null;
+    return `https://basescan.org/tx/${txHash}`;
   };
 
   return (
     <div 
-      className="h-full flex flex-col text-white border-l rounded-l-lg"
+      className="h-full w-full flex flex-col text-white border-l rounded-l-lg"
       style={{ 
         backgroundColor: colors.cardBg, 
         borderColor: colors.cardBorder 
@@ -76,77 +42,93 @@ export default function Chat() {
           borderColor: colors.cardBorder 
         }}
       >
-        <h2 className="text-lg font-bold">All Chat</h2>
+        <h2 className="text-lg font-bold">Guess History</h2>
         <div 
-          className="w-4 h-4 border-2 rounded-full"
-          style={{ borderColor: colors.somniaPurple }}
+          className="w-4 h-4 border-2 rounded-full glow-red"
+          style={{ borderColor: colors.hackerRed, backgroundColor: colors.hackerRed }}
         ></div>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.length === 0 ? (
+      <div 
+        className="flex-1 overflow-y-auto p-4 space-y-3 history-scroll"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: `${colors.hackerRed} ${colors.cardBg}`
+        }}
+      >
+        {guessHistory.length === 0 ? (
           <div className="text-center mt-2" style={{ color: colors.muted }}>
             <div 
-              className="rounded-lg px-4 py-3 inline-block"
-              style={{ backgroundColor: colors.somniaPurple }}
+              className="rounded-lg px-4 py-3 inline-block hacker-border glow-red"
+              style={{ backgroundColor: colors.hackerRed }}
             >
               <p className="text-sm text-white">
-                Welcome to the crypto game chat, {address ? address.slice(0, 6) + "..." + address.slice(-4) : "Guest"}!
+                No guess history available
               </p>
             </div>
           </div>
         ) : (
-          messages.map((message) => (
-            <div key={message.id} className="mb-3">
+          guessHistory.map((guess, index) => (
+            <div key={guess.id || index} className="mb-3">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-bold" style={{ color: colors.muted }}>{message.sender}</span>
-                <span className="text-xs" style={{ color: colors.muted, opacity: 0.7 }}>
-                  {message.timestamp.toLocaleTimeString()}
+                <span className="text-xs font-bold" style={{ color: colors.muted }}>
+                  Guess #{guess.guessNumber}
                 </span>
+                <span className="text-xs" style={{ color: colors.muted, opacity: 0.7 }}>
+                  {formatTimestamp(guess.timestamp)}
+                </span>
+                {guess.isCorrect && (
+                  <span 
+                    className="text-xs px-2 py-0.5 rounded hacker-border"
+                    style={{ backgroundColor: colors.cyberGreen, color: '#000000' }}
+                  >
+                    ✓ CORRECT
+                  </span>
+                )}
               </div>
               <div 
-                className="rounded-lg px-3 py-2"
+                className="rounded-lg px-3 py-2 space-y-2"
                 style={{ backgroundColor: colors.cardBorder }}
               >
-                <p className="text-sm">{message.text}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold" style={{ color: colors.foreground }}>
+                      {guess.word}
+                    </span>
+                    {!guess.isCorrect && (
+                      <span className="text-xs" style={{ color: colors.muted }}>
+                        ✗
+                      </span>
+                    )}
+                  </div>
+                  <div 
+                    className="text-xs px-2 py-1 rounded"
+                    style={{ backgroundColor: colors.cardBg }}
+                  >
+                    {guess.costPaid === 0 ? "FREE" : `${guess.costPaid} USDC`}
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-xs" style={{ color: colors.muted }}>
+                  <span>Agent: {guess.agentId.slice(0, 12)}...</span>
+                  <span>Round: #{guess.roundId}</span>
+                </div>
+                {guess.txHash && (
+                  <a
+                    href={getBaseExplorerUrl(guess.txHash) || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs hover:underline transition-opacity"
+                    style={{ color: colors.cyberBlue }}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = "0.8"}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}
+                  >
+                    TX: {formatTxHash(guess.txHash)}
+                  </a>
+                )}
               </div>
             </div>
           ))
         )}
-      </div>
-
-      <div 
-        className="border-t p-4 rounded-bl-lg"
-        style={{ 
-          backgroundColor: colors.background, 
-          borderColor: colors.cardBorder 
-        }}
-      >
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Type a message..."
-            className="flex-1 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2"
-            style={{ 
-              backgroundColor: colors.cardBg, 
-              border: `1px solid ${colors.cardBorder}`,
-            }}
-            onFocus={(e) => e.currentTarget.style.borderColor = colors.somniaPurple}
-            onBlur={(e) => e.currentTarget.style.borderColor = colors.cardBorder}
-          />
-          <button
-            onClick={handleSendMessage}
-            className="text-white px-4 py-2 rounded-lg transition-opacity"
-            style={{ backgroundColor: colors.somniaPurple }}
-            onMouseEnter={(e) => e.currentTarget.style.opacity = "0.9"}
-            onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}
-          >
-            ➤
-          </button>
-        </div>
       </div>
     </div>
   );

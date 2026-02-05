@@ -1,17 +1,63 @@
 "use client";
-import { useChainId } from "wagmi";
+import { useState, useEffect } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { colors } from "@/theme";
-import { WalletConnect } from "@/components/WalletConnect";
+import poolData from "@/data/pool-data.json";
+
+interface PoolData {
+  id: number;
+  phase: string;
+  jackpot: number;
+  initialJackpot: number;
+  startedAt: number;
+  participantCount: number;
+  totalGuesses: number;
+  guessedWords: string[];
+}
+
+interface StatusResponse {
+  currentRound: {
+    id: number;
+    phase: string;
+    participantCount: number;
+  } | null;
+  totalRoundsPlayed: number;
+  totalAgentsRegistered: number;
+}
 
 export default function Navbar() {
-  const chainId = useChainId();
+  const [pool, setPool] = useState<PoolData>(poolData as PoolData);
+  const [totalAgents, setTotalAgents] = useState<number>(0);
+  const [totalRounds, setTotalRounds] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
 
-  const getNetworkName = () => {
-    if (chainId === 11155111) return "Sepolia";
-    if (chainId === 1) return "Ethereum";
-    if (chainId === 10143) return "Monad Testnet";
-    return "Unknown Network";
+  useEffect(() => {
+    // Load pool data from JSON
+    setPool(poolData as PoolData);
+
+    // Fetch status from API
+    const fetchStatus = async () => {
+      try {
+        const response = await fetch('/api/status');
+        if (response.ok) {
+          const data: StatusResponse = await response.json();
+          setTotalAgents(data.totalAgentsRegistered || 0);
+          setTotalRounds(data.totalRoundsPlayed || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching status:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStatus();
+  }, []);
+
+  const formatRound = () => {
+    const currentRound = pool.id;
+    const total = totalRounds || currentRound;
+    return `${String(currentRound).padStart(2, '0')}/${String(total).padStart(2, '0')}`;
   };
 
   return (
@@ -23,19 +69,52 @@ export default function Navbar() {
       }}
     >
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-bold" style={{ color: colors.somniaPurple }}>
+        <h1 
+          className="text-xl font-bold cyber-text uppercase tracking-wider" 
+          style={{ color: colors.hackerRed }}
+        >
           Let's HaVE a WORD
         </h1>
-        <div className="flex items-center gap-2">
-          <div 
-            className="w-2 h-2 rounded-full"
-            style={{ backgroundColor: colors.somniaPurple }}
-          ></div>
-          <span className="text-sm font-medium">{getNetworkName()}</span>
-        </div>
       </div>
-      <div className="flex items-center gap-4">
-        <WalletConnect />
+      <div className="flex items-center gap-8">
+        {/* ROUND */}
+        <div className="flex flex-col">
+          <span className="text-xs font-medium" style={{ color: colors.muted }}>ROUND</span>
+          <span className="text-sm font-bold" style={{ color: colors.foreground }}>
+            {formatRound()}
+          </span>
+        </div>
+
+        {/* PROTOCOL */}
+        <div className="flex flex-col">
+          <span className="text-xs font-medium" style={{ color: colors.muted }}>PROTOCOL</span>
+          <span className="text-sm font-bold" style={{ color: colors.foreground }}>
+            WORD GAME
+          </span>
+        </div>
+
+        {/* AGENTS */}
+        <div className="flex flex-col">
+          <span className="text-xs font-medium" style={{ color: colors.muted }}>AGENTS</span>
+          <span className="text-sm font-bold" style={{ color: colors.foreground }}>
+            {loading ? '...' : totalAgents || pool.participantCount}
+          </span>
+        </div>
+
+        {/* STATUS */}
+        <div className="flex flex-col">
+          <span className="text-xs font-medium" style={{ color: colors.muted }}>STATUS</span>
+          <div className="flex items-center gap-2">
+            <div 
+              className="w-2 h-2 rounded-full glow-red"
+              style={{ backgroundColor: colors.hackerRed }}
+            ></div>
+            <span className="text-sm font-bold" style={{ color: colors.foreground }}>
+              {pool.phase === 'active' ? 'LIVE' : pool.phase.toUpperCase()}
+            </span>
+          </div>
+        </div>
+
         {/* Info Button with Tooltip */}
         <div className="relative group">
           <button

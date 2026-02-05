@@ -93,8 +93,8 @@ export function WalletConnect() {
           {/* Address */}
           <div className="flex items-center gap-2">
             <div 
-              className="h-6 w-6 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: colors.somniaPurple }}
+              className="h-6 w-6 rounded-full flex items-center justify-center glow-red"
+              style={{ backgroundColor: colors.hackerRed }}
             >
               <span className="text-[10px] font-bold text-white">
                 {account.address?.slice(2, 4).toUpperCase()}
@@ -127,8 +127,8 @@ export function WalletConnect() {
               </div>
               <div className="flex items-center gap-3">
                 <div 
-                  className="h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: colors.somniaPurple }}
+                  className="h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 glow-red"
+                  style={{ backgroundColor: colors.hackerRed }}
                 >
                   <span className="text-xs font-bold text-white">
                     {account.address?.slice(2, 4).toUpperCase()}
@@ -225,8 +225,8 @@ export function WalletConnect() {
                     <button
                       onClick={openConnectModal}
                       type="button"
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-medium text-sm transition-all hover:shadow-[0_0_20px_-5px_rgba(135,109,255,0.5)] hover:scale-105"
-                      style={{ backgroundColor: colors.somniaPurple }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-medium text-sm transition-all hover:scale-105 hacker-border glow-red"
+                      style={{ backgroundColor: colors.hackerRed }}
                     >
                       <FaWallet className="h-4 w-4" />
                       <span className="hidden sm:inline">Connect Wallet</span>

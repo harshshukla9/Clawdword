@@ -1,10 +1,31 @@
 "use client";
+import { useState, useEffect } from "react";
 import { colors } from "@/theme";
+import poolData from "@/data/pool-data.json";
 
-const maxAttempts = 6;
-const multiplier = 5;
+interface PoolData {
+  id: number;
+  phase: string;
+  jackpot: number;
+  initialJackpot: number;
+  startedAt: number;
+  participantCount: number;
+  totalGuesses: number;
+  guessedWords: string[];
+}
 
 export default function GameControls() {
+  const [pool, setPool] = useState<PoolData>(poolData as PoolData);
+
+  useEffect(() => {
+    // Load pool data from JSON
+    setPool(poolData as PoolData);
+  }, []);
+
+  const formatTimestamp = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  };
 
   return (
     <div 
@@ -14,44 +35,19 @@ export default function GameControls() {
         borderColor: colors.cardBorder 
       }}
     >
+      {/* Pool Data Section */}
       <div className="mb-4">
-        <div className="flex gap-2 mb-2">
-          <button 
-            disabled
-            className="flex-1 px-4 py-2 rounded text-sm font-medium"
-            style={{ backgroundColor: colors.somniaPurple }}
-          >
-            Agents
-          </button>
-          <button 
-            disabled
-            className="flex-1 px-4 py-2 rounded text-sm font-medium opacity-50 cursor-not-allowed"
-            style={{ backgroundColor: colors.background }}
-          >
-            Humans
-          </button>
-        </div>
-      </div>
-
-      {/* Statistics Section */}
-      <div className="mb-4 space-y-3">
-        <div className="flex justify-between items-center">
-          <span className="text-sm font-medium" style={{ color: colors.muted }}>Global Guessees</span>
-          <div 
-            className="text-white px-3 py-1.5 rounded-lg font-bold text-sm"
-            style={{ backgroundColor: colors.cardBorder }}
-          >
-            1,234
-          </div>
-        </div>
-
+        <h2 className="text-lg font-bold mb-3" style={{ color: colors.foreground }}>
+          Current Pool Stats
+        </h2>
+        <div className="space-y-3">
         <div className="flex justify-between items-center">
           <span className="text-sm font-medium" style={{ color: colors.muted }}>Prize Pool</span>
           <div 
-            className="text-white px-3 py-1.5 rounded-lg font-bold text-sm"
-            style={{ backgroundColor: colors.somniaPurple }}
+            className="text-white px-3 py-1.5 rounded-lg font-bold text-sm hacker-border glow-red"
+            style={{ backgroundColor: colors.hackerRed }}
           >
-            5,678.90 MON
+            {pool.jackpot.toFixed(2)} USDC
           </div>
         </div>
 
@@ -61,48 +57,59 @@ export default function GameControls() {
             className="text-white px-3 py-1.5 rounded-lg font-bold text-sm"
             style={{ backgroundColor: colors.cardBorder }}
           >
-            #42
+            #{pool.id}
           </div>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium" style={{ color: colors.muted }}>Total Guesses Left</span>
+          <span className="text-sm font-medium" style={{ color: colors.muted }}>Phase</span>
           <div 
-            className="text-white px-3 py-1.5 rounded-lg font-bold text-sm"
-            style={{ backgroundColor: "#ef4444" }}
+            className="text-white px-3 py-1.5 rounded-lg font-bold text-sm hacker-border glow-red"
+            style={{ backgroundColor: colors.hackerRed }}
           >
-            {maxAttempts}
+            {pool.phase.toUpperCase()}
           </div>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium" style={{ color: colors.muted }}>Agent Balance</span>
+          <span className="text-sm font-medium" style={{ color: colors.muted }}>Initial Jackpot</span>
           <div 
             className="text-white px-3 py-1.5 rounded-lg font-bold text-sm"
             style={{ backgroundColor: colors.cardBorder }}
           >
-            1,000.00 MON
+            {pool.initialJackpot.toFixed(2)} USDC
           </div>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium" style={{ color: colors.muted }}>Total Profit</span>
+          <span className="text-sm font-medium" style={{ color: colors.muted }}>Started At</span>
           <div 
-            className="text-white px-3 py-1.5 rounded-lg font-bold text-sm"
-            style={{ backgroundColor: "#10b981" }}
+            className="text-white px-3 py-1.5 rounded-lg font-bold text-xs"
+            style={{ backgroundColor: colors.cardBorder }}
           >
-            0.00 MON ($0.00)
+            {formatTimestamp(pool.startedAt)}
           </div>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium" style={{ color: colors.muted }}>Agents on Board</span>
+          <span className="text-sm font-medium" style={{ color: colors.muted }}>Participants</span>
+          <div 
+            className="text-white px-3 py-1.5 rounded-lg font-bold text-sm hacker-border glow-red"
+            style={{ backgroundColor: colors.hackerRed }}
+          >
+            {pool.participantCount}
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-medium" style={{ color: colors.muted }}>Total Guesses</span>
           <div 
             className="text-white px-3 py-1.5 rounded-lg font-bold text-sm"
-            style={{ backgroundColor: colors.somniaPurple }}
+            style={{ backgroundColor: colors.cardBorder }}
           >
-            567
+            {pool.totalGuesses}
           </div>
+        </div>
         </div>
       </div>
 

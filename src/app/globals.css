@@ -5,22 +5,37 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
-  --somnia-purple: #876dff;
-  --monad-purple: #876dff; /* Keep for backward compatibility */
-  --card-bg: #121212;
-  --card-border: #262626;
-  --muted: #a1a1aa;
+  --somnia-purple: #ff0040;
+  --monad-purple: #ff0040; /* Keep for backward compatibility */
+  --hacker-red: #ff0040;
+  --hacker-red-dark: #cc0033;
+  --hacker-red-light: #ff3366;
+  --hacker-red-glow: #ff0040;
+  --card-bg: #0a0a0a;
+  --card-border: #1a0000;
+  --card-border-glow: #ff0040;
+  --muted: #666666;
+  --text-secondary: #999999;
+  --cyber-blue: #00d4ff;
+  --cyber-green: #00ff41;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 @theme {
   --color-somnia-purple: var(--somnia-purple);
   --color-monad-purple: var(--monad-purple); /* Keep for backward compatibility */
+  --color-hacker-red: var(--hacker-red);
+  --color-hacker-red-dark: var(--hacker-red-dark);
+  --color-hacker-red-light: var(--hacker-red-light);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card-bg);
   --color-card-border: var(--card-border);
+  --color-card-border-glow: var(--card-border-glow);
   --color-muted: var(--muted);
+  --color-text-secondary: var(--text-secondary);
+  --color-cyber-blue: var(--cyber-blue);
+  --color-cyber-green: var(--cyber-green);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -42,6 +57,22 @@ body {
   font-family: var(--font-mono), 'JetBrains Mono', monospace;
   margin: 0;
   padding: 0;
+  position: relative;
+}
+
+/* Hacker theme background effect */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 0, 64, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(255, 0, 64, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Apply mono font everywhere */
@@ -84,28 +115,42 @@ body {
   animation: slide-in-from-right 0.3s ease-out forwards;
 }
 
-/* Retro button styles */
+/* Hacker/cyberpunk button styles */
 .retro {
 	display: inline-block;
 	vertical-align: middle;
 	padding: 0.375rem 0.75rem;
-	background: white;
-	color: black;
-	border: 3px solid black !important;
+	background: #000000;
+	color: #ff0040;
+	border: 2px solid #ff0040 !important;
 	border-radius: 0;
-	box-shadow: 3px 3px black, 5px 5px white;
+	box-shadow: 
+		0 0 10px rgba(255, 0, 64, 0.5),
+		0 0 20px rgba(255, 0, 64, 0.3),
+		inset 0 0 10px rgba(255, 0, 64, 0.1);
 	padding-right: 5%;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 600;
+	transition: all 0.3s ease;
 }
 
 .retro:hover {
-	color: black;
-	background: white;
+	color: #ffffff;
+	background: #ff0040;
 	cursor: pointer;
+	box-shadow: 
+		0 0 20px rgba(255, 0, 64, 0.8),
+		0 0 40px rgba(255, 0, 64, 0.5),
+		inset 0 0 20px rgba(255, 0, 64, 0.2);
+	transform: translateY(-2px);
 }
 
 .retro:active {
-	box-shadow: 0px 0px white;
-	transform: translateX(5px) translateY(2px);
+	box-shadow: 
+		0 0 5px rgba(255, 0, 64, 0.5),
+		inset 0 0 5px rgba(255, 0, 64, 0.2);
+	transform: translateY(0) translateX(2px);
 }
 
 .rbtn-small {
@@ -202,9 +247,119 @@ button {
   display: none;  /* Chrome, Safari and Opera */
 }
 
-/* Tailwind utility for monad-purple background */
+/* Custom scrollbar styling for history container */
+.history-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-scroll::-webkit-scrollbar-track {
+  background: var(--card-bg);
+  border-radius: 4px;
+}
+
+.history-scroll::-webkit-scrollbar-thumb {
+  background: var(--hacker-red);
+  border-radius: 4px;
+  opacity: 0.6;
+}
+
+.history-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--hacker-red);
+  opacity: 0.8;
+}
+
+/* Hacker theme utilities */
 @layer utilities {
   .bg-monad-purple {
     background-color: var(--monad-purple);
   }
+  
+  .bg-hacker-red {
+    background-color: var(--hacker-red);
+  }
+  
+  .text-hacker-red {
+    color: var(--hacker-red);
+  }
+  
+  .border-hacker-red {
+    border-color: var(--hacker-red);
+  }
+  
+  .glow-red {
+    box-shadow: 0 0 10px rgba(255, 0, 64, 0.5), 0 0 20px rgba(255, 0, 64, 0.3);
+  }
+  
+  .glow-red-strong {
+    box-shadow: 0 0 20px rgba(255, 0, 64, 0.8), 0 0 40px rgba(255, 0, 64, 0.5);
+  }
+  
+  .hacker-border {
+    border: 1px solid var(--hacker-red);
+    box-shadow: 
+      0 0 5px rgba(255, 0, 64, 0.3),
+      inset 0 0 5px rgba(255, 0, 64, 0.1);
+  }
+  
+  .cyber-text {
+    text-shadow: 
+      0 0 5px var(--hacker-red),
+      0 0 10px var(--hacker-red),
+      0 0 15px var(--hacker-red);
+  }
+}
+
+/* Cyberpunk scanline effect */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.scanline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 0, 64, 0.3),
+    transparent
+  );
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0%, 100% {
+    text-shadow: 
+      2px 0 var(--hacker-red),
+      -2px 0 var(--cyber-blue);
+  }
+  25% {
+    text-shadow: 
+      -2px 0 var(--hacker-red),
+      2px 0 var(--cyber-blue);
+  }
+  50% {
+    text-shadow: 
+      2px 0 var(--hacker-red),
+      -2px 0 var(--cyber-blue);
+  }
+  75% {
+    text-shadow: 
+      -2px 0 var(--hacker-red),
+      2px 0 var(--cyber-blue);
+  }
+}
+
+.glitch-text {
+  animation: glitch 0.3s infinite;
 }
