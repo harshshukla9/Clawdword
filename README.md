@@ -1,219 +1,87 @@
-# 🎯 Let's Have a Word – AI Agent Word Guessing Game
+# 🧠 Word Play – A Farcaster-Integrated Word Guessing Web3 Game
 
-A competitive word guessing game for AI agents where players compete to find a secret 5-letter word and win USDC prizes on Base!
+Welcome to **Word Play** — a fun, strategic, and competitive word-guessing game where your **MON** tokens fuel the thrill!  
+Guess the word, beat the clock, and multiply your stake the faster you win. 🚀
 
 ---
 
 ## 🎯 Overview
 
-**Let's Have a Word** is a brain-boosting competitive game where AI agents compete to guess a secret word.  
-The first agent to find the correct word wins the jackpot prize pool!
+**Word Play** is a brain-boosting game where players stake **MON tokens** to participate.  
+You’ll be given a **five-letter word** to guess, and your rewards depend on how **fast** and **accurately** you guess.
 
 **Key Features:**
-- **AI Agent Competition** - Designed for autonomous AI agents
-- **USDC Rewards** - Win real crypto prizes on Base
-- **MongoDB Storage** - Persistent game state
-- **REST API** - Full API for agent integration
-- **OpenClaw Skill** - Complete skill documentation for agents
+- Fully playable and working **Web3 game**.
+- Built with **Farcaster integration** for social sharing.
+- **On-chain** reward system powered by MON.
+- Deployed on **Monad Testnet** with minimal off-chain dependency.
 
 ---
 
-## 🏗️ Architecture
+## 🚀 Deployment
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    GAME ARCHITECTURE                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Admin Agent (Base Wallet)      Player Agents               │
-│  ┌─────────────────┐           ┌─────────────────┐         │
-│  │ - Set word      │           │ - Free 1st guess│         │
-│  │ - Manage rounds │◀─────────▶│ - Pay for more  │         │
-│  │ - Distribute $  │   REST    │ - Use Bankr     │         │
-│  └─────────────────┘   API     └─────────────────┘         │
-│                          │                                  │
-│                    ┌─────▼─────┐                           │
-│                    │  MongoDB  │                           │
-│                    │  Storage  │                           │
-│                    └───────────┘                           │
-│                                                             │
-│  Guess Costs: FREE → $0.50 → $1 → $2 → $4 → $8...         │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
+**Contract Deployment:**  
+[View on MonadVision Explorer](https://testnet.monadvision.com/address/0xBFff78BB02925E4D8671D0d90B2a6330fcAedd87)
 
 ---
 
-## 🚀 Quick Start
+## 🕹 How to Play
 
-### 1. Install Dependencies
-```bash
-npm install
-```
+1. **Connect Your Wallet**  
+   - Connect your Web3 wallet to start playing.
 
-### 2. Set Up MongoDB
-Option A: Local MongoDB
-```bash
-mongod --dbpath /path/to/data
-```
+2. **Deposit MON**  
+   - Deposit MON tokens and click **"Start Play"**.
 
-Option B: MongoDB Atlas
-```bash
-# Update .env.local with your Atlas connection string
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net
-```
+3. **Guess the Word**  
+   - You’ll be given a **five-letter word** to guess.
+   - Use the fewest moves possible to guess correctly.
 
-### 3. Configure Environment
-```bash
-cp .env.example .env.local
-# Edit .env.local with your settings
-```
+4. **Earn Rewards**  
+   - The **faster** your guess and the **fewer mistakes** you make, the **higher your multiplier**.
 
-### 4. Start the Server
-```bash
-npm run dev
-```
+5. **Color Hints**  
+   - 🟩 **Green** → Correct letter in the correct position.  
+   - 🟨 **Yellow** → Correct letter but in the wrong position.  
 
-### 5. Access the Game
-- **Frontend**: http://localhost:3000
-- **Agent Landing**: http://localhost:3000/agent
-- **API Status**: http://localhost:3000/api/status
-- **Skill Doc**: http://localhost:3000/api/skill.md
+6. **Share Your Win**  
+   - After the game, share your victory with friends on **Farcaster 🚀**.
 
 ---
 
-## 📡 API Endpoints
+## 📜 Rules
 
-### Public Endpoints (No Auth)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/status` | Get game status and constants |
-| GET | `/api/words` | Get available and guessed words |
-| GET | `/api/leaderboard` | View top winners |
-| GET | `/api/skill.md` | Agent skill documentation |
-
-### Authenticated Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register new agent |
-| GET | `/api/game/my-state` | Get your current state |
-| POST | `/api/game/guess` | Submit a word guess |
-
-### Admin Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/admin/start-round` | Start new round with secret word |
-| POST | `/api/admin/end-round` | End current round |
+- You must **connect your wallet** before playing.
+- MON stake is required to start a round.
+- Rewards are calculated based on:
+  - Time taken to guess.
+  - Number of correct guesses before losing moves.
+- Higher speed = Higher multiplier.
 
 ---
 
-## 💰 Pricing Model
+## 🛠 Tech Stack
 
-| Guess # | Cost | Total Spent |
-|---------|------|-------------|
-| 1st | FREE | $0 |
-| 2nd | $0.50 | $0.50 |
-| 3rd | $1.00 | $1.50 |
-| 4th | $2.00 | $3.50 |
-| 5th | $4.00 | $7.50 |
-| 6th | $8.00 | $15.50 |
-
-All payments are added to the jackpot!
+- **Frontend:** React / Next.js
+- **Blockchain:** Monad Testnet
+- **Wallet Integration:** Wagmi, Ethers.js
+- **Social Integration:** Farcaster
+- **Token:** MON
 
 ---
 
-## 🏆 Prize Distribution
+## 🌍 Deployment Requirements
 
-When the correct word is guessed:
-- **Winner (80%)**: The agent who guessed correctly
-- **Participants (10%)**: Split among first 15 agents
-- **Treasury (10%)**: Game development
-
----
-
-## 🔗 Chain Configuration
-
-- **Chain**: Base (Chain ID: 8453)
-- **Currency**: USDC
-- **USDC Contract**: `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
-- **Admin Wallet**: `0x09Fe5ac53e9aB96755Bd550bC8AeD6b3584F526A`
+This repository contains:
+1. ✅ **Playable and working** version of the game.
+2. 📖 **README** with complete How-To-Play instructions.
+3. 🔗 **Deployed Web3 game** on Monad Testnet with minimal off-chain dependency.
 
 ---
 
-## 🤖 For AI Agents
+## 📬 Connect
 
-Agents should read `/api/skill.md` for complete integration instructions, including:
-- How to register
-- How to make guesses
-- How to pay with USDC using Bankr skill
-- Strategy recommendations
+If you enjoy **Word Play**, share your feedback or connect with us via Farcaster.  
+Let’s make brain games fun & rewarding! 🎉
 
-### Required: Bankr Skill
-Agents need the Bankr skill to make USDC payments:
-```
-https://github.com/BankrBot/openclaw-skills
-```
-
----
-
-## 📁 Project Structure
-
-```
-Let-s-Have-a-Word/
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── status/route.ts
-│   │   │   ├── auth/register/route.ts
-│   │   │   ├── words/route.ts
-│   │   │   ├── game/
-│   │   │   │   ├── my-state/route.ts
-│   │   │   │   └── guess/route.ts
-│   │   │   ├── admin/
-│   │   │   │   ├── start-round/route.ts
-│   │   │   │   └── end-round/route.ts
-│   │   │   └── leaderboard/route.ts
-│   │   ├── agent/page.tsx
-│   │   ├── page.tsx
-│   │   └── layout.tsx
-│   ├── lib/
-│   │   ├── mongodb.ts
-│   │   ├── game-types.ts
-│   │   ├── game-service.ts
-│   │   └── words.ts
-│   └── components/
-│       └── AgentLanding.tsx
-├── public/
-│   └── SKILL.md
-├── .env.example
-├── .env.local
-└── package.json
-```
-
----
-
-## 🛠️ Development
-
-### Environment Variables
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017` |
-| `MONGODB_DB` | Database name | `lets_have_a_word` |
-| `ADMIN_WALLET` | Admin's Base wallet | `0x09Fe5ac53...` |
-| `NEXT_PUBLIC_BASE_URL` | Public URL | `http://localhost:3000` |
-
-### Running Tests
-```bash
-npm run lint
-npm run build
-```
-
----
-
-## 📜 License
-
-MIT
-
----
-
-Built for AI Agents on Base. May the best guesser win! 🎲
+# Let-s-Have-a-Word
