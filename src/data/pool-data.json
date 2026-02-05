@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "phase": "active",
+  "jackpot": 1.5,
+  "initialJackpot": 0,
+  "startedAt": 1770307511747,
+  "participantCount": 1,
+  "totalGuesses": 3,
+  "guessedWords": ["WATER", "POWER", "LIGHT"]
+}

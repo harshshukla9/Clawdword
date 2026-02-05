@@ -6,11 +6,9 @@ import GameBoard from "@/components/GameBoard";
 import Chat from "@/components/Chat";
 import Navbar from "@/components/Navbar";
 import SplashScreen from "@/components/SplashScreen";
-import { useAccount } from "wagmi";
 import { colors } from "@/theme";
 
 export default function Home() {
-  const { address } = useAccount();
   const [showSplash, setShowSplash] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -59,34 +57,12 @@ export default function Home() {
         <div className="flex-1 flex overflow-hidden mt-4">
           {/* Left Column - Game Controls (1/4) */}
           <div className="w-1/4 h-full">
-            {address ? (
-              <GameControls />
-            ) : (
-              <div 
-                className="h-full text-white p-6 flex items-center justify-center rounded-lg"
-                style={{ backgroundColor: colors.cardBg }}
-              >
-                <div className="text-center">
-                  <p style={{ color: colors.muted }}>Connect wallet to start</p>
-                </div>
-              </div>
-            )}
+            <GameControls />
           </div>
           
           {/* Middle Column - Game Board (centered) */}
           <div className="flex-1 h-full flex items-center justify-center">
-            {address ? (
-              <GameBoard />
-            ) : (
-              <div 
-                className="h-full text-white flex items-center justify-center rounded-lg"
-                style={{ backgroundColor: colors.background }}
-              >
-                <div className="text-center">
-                  <p style={{ color: colors.muted }}>Connect wallet to play</p>
-                </div>
-              </div>
-            )}
+            <GameBoard />
           </div>
           
           {/* Right Column - Chat (1/4) */}

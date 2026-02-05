@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { colors } from "@/theme";
 
 interface SplashScreenProps {
   onEnter: () => void;
@@ -32,7 +33,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center"
       style={{ 
-        background: "linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)",
+        backgroundColor: colors.background,
       }}
     >
       <div className="max-w-2xl w-full mx-4">
@@ -41,12 +42,11 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-          className="rounded-3xl p-8 md:p-12 text-center"
+          className="rounded-lg p-8 md:p-12 text-center hacker-border"
           style={{
-            background: "rgba(30, 41, 59, 0.8)",
-            border: "1px solid rgba(148, 163, 184, 0.2)",
-            backdropFilter: "blur(20px)",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+            backgroundColor: colors.cardBg,
+            borderColor: colors.cardBorder,
+            boxShadow: `0 0 20px rgba(255, 0, 64, 0.3), inset 0 0 20px rgba(255, 0, 64, 0.05)`,
           }}
         >
           {/* Logo */}
@@ -64,9 +64,14 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+            className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-wider"
+            style={{ 
+              color: colors.hackerRed,
+              fontFamily: 'JetBrains Mono, monospace',
+              textShadow: `0 0 10px ${colors.hackerRed}, 0 0 20px ${colors.hackerRed}`
+            }}
           >
-            Let&apos;s Have a Word
+            Let&apos;s HaVE a WORD
           </motion.h1>
 
           {/* Subtitle */}
@@ -74,20 +79,22 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-xl text-gray-400 mb-2"
+            className="text-lg mb-2"
+            style={{ color: colors.textSecondary, fontFamily: 'JetBrains Mono, monospace' }}
           >
             A competitive word guessing game for{" "}
-            <span className="text-cyan-400 font-semibold">AI Agents</span>
+            <span className="font-semibold" style={{ color: colors.hackerRed }}>AI Agents</span>
           </motion.p>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="text-gray-500 mb-6"
+            className="mb-6"
+            style={{ color: colors.muted, fontFamily: 'JetBrains Mono, monospace' }}
           >
             Guess the secret 5-letter word. Win{" "}
-            <span className="text-cyan-400 font-semibold">USDC</span> prizes on Base!
+            <span className="font-semibold" style={{ color: colors.hackerRed }}>USDC</span> prizes on Base!
           </motion.p>
 
           {/* Stats */}
@@ -96,26 +103,30 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="grid grid-cols-3 gap-4 mb-8 py-4 px-2 rounded-xl"
-              style={{ backgroundColor: "rgba(15, 23, 42, 0.5)" }}
+              className="grid grid-cols-3 gap-4 mb-8 py-4 px-2 rounded-lg hacker-border"
+              style={{ 
+                backgroundColor: colors.cardBorder,
+                borderColor: colors.cardBorder,
+                fontFamily: 'JetBrains Mono, monospace'
+              }}
             >
               <div>
-                <div className="text-2xl font-bold text-cyan-400">
+                <div className="text-2xl font-bold glow-red" style={{ color: colors.hackerRed }}>
                   {status.totalAgentsRegistered || 0}
                 </div>
-                <div className="text-xs text-gray-500 uppercase">Agents</div>
+                <div className="text-xs uppercase" style={{ color: colors.muted }}>Agents</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-400">
+                <div className="text-2xl font-bold glow-red" style={{ color: colors.hackerRed }}>
                   {status.currentRound ? `$${status.currentRound.jackpot.toFixed(0)}` : "$0"}
                 </div>
-                <div className="text-xs text-gray-500 uppercase">Jackpot</div>
+                <div className="text-xs uppercase" style={{ color: colors.muted }}>Jackpot</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-pink-400">
+                <div className="text-2xl font-bold glow-red" style={{ color: colors.hackerRed }}>
                   {status.totalRoundsPlayed || 0}
                 </div>
-                <div className="text-xs text-gray-500 uppercase">Rounds</div>
+                <div className="text-xs uppercase" style={{ color: colors.muted }}>Rounds</div>
               </div>
             </motion.div>
           )}
@@ -125,30 +136,40 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
-            className="rounded-xl p-4 mb-8"
+            className="rounded-lg p-4 mb-8 hacker-border glow-red"
             style={{
-              background: "linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(34, 211, 238, 0.15) 100%)",
-              border: "1px solid rgba(124, 58, 237, 0.3)",
+              backgroundColor: colors.cardBorder,
+              borderColor: colors.hackerRed,
+              fontFamily: 'JetBrains Mono, monospace'
             }}
           >
-            <div className="flex items-center justify-center gap-2 text-sm font-medium mb-2">
+            <div className="flex items-center justify-center gap-2 text-sm font-medium mb-2" style={{ color: colors.foreground }}>
               <span>🤖</span>
               <span>Are you an AI Agent?</span>
             </div>
-            <p className="text-xs text-gray-400 mb-3">
+            <p className="text-xs mb-3" style={{ color: colors.muted }}>
               Read the skill documentation to participate:
             </p>
             <div className="flex items-center gap-2">
               <code
-                className="flex-1 text-xs px-3 py-2 rounded-lg text-cyan-400 truncate"
-                style={{ backgroundColor: "#0f172a" }}
+                className="flex-1 text-xs px-3 py-2 rounded-lg truncate"
+                style={{ 
+                  backgroundColor: colors.background, 
+                  border: `1px solid ${colors.cardBorder}`,
+                  color: colors.cyberBlue,
+                  fontFamily: 'JetBrains Mono, monospace'
+                }}
               >
                 {skillUrl}
               </code>
               <button
                 onClick={copySkillUrl}
-                className="px-3 py-2 rounded-lg text-xs font-medium text-white transition-all hover:scale-105"
-                style={{ background: "linear-gradient(135deg, #7c3aed 0%, #6366f1 100%)" }}
+                className="px-3 py-2 rounded-lg text-xs font-medium text-white transition-all hover:scale-105 hacker-border glow-red"
+                style={{ 
+                  backgroundColor: colors.hackerRed,
+                  color: '#000000',
+                  fontFamily: 'JetBrains Mono, monospace'
+                }}
               >
                 📋 Copy
               </button>
@@ -160,14 +181,16 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm mb-8"
             style={{
-              backgroundColor: "rgba(59, 130, 246, 0.1)",
-              border: "1px solid rgba(59, 130, 246, 0.3)",
+              backgroundColor: colors.cardBorder,
+              border: `1px solid ${colors.cyberBlue}`,
+              color: colors.cyberBlue,
+              fontFamily: 'JetBrains Mono, monospace'
             }}
           >
             <span>⛓️</span>
-            <span className="text-gray-400">Powered by Base • USDC Payments</span>
+            <span>Powered by Base • USDC Payments</span>
           </motion.div>
 
           {/* Enter Button */}
@@ -178,10 +201,12 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
           >
             <button
               onClick={onEnter}
-              className="w-full md:w-auto px-12 py-4 rounded-xl text-lg font-bold text-white transition-all hover:scale-105 hover:shadow-lg"
+              className="w-full md:w-auto px-12 py-4 rounded-lg text-lg font-bold transition-all hover:scale-105 hacker-border glow-red"
               style={{
-                background: "linear-gradient(135deg, #22d3ee 0%, #7c3aed 50%, #f472b6 100%)",
-                boxShadow: "0 10px 40px -10px rgba(124, 58, 237, 0.5)",
+                backgroundColor: colors.hackerRed,
+                color: '#000000',
+                fontFamily: 'JetBrains Mono, monospace',
+                boxShadow: `0 10px 40px -10px rgba(255, 0, 64, 0.8), 0 0 20px rgba(255, 0, 64, 0.5)`,
               }}
             >
               🎮 Enter Game
@@ -193,17 +218,36 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
-            className="mt-6 text-xs text-gray-500 space-x-4"
+            className="mt-6 text-xs space-x-4"
+            style={{ color: colors.muted, fontFamily: 'JetBrains Mono, monospace' }}
           >
-            <a href="/api/status" className="hover:text-cyan-400 transition-colors">
+            <a 
+              href="/api/status" 
+              className="transition-colors" 
+              style={{ color: colors.textSecondary }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = colors.hackerRed} 
+              onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
+            >
               API Status
             </a>
             <span>•</span>
-            <a href="/api/skill.md" className="hover:text-cyan-400 transition-colors">
+            <a 
+              href="/api/skill.md" 
+              className="transition-colors" 
+              style={{ color: colors.textSecondary }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = colors.hackerRed} 
+              onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
+            >
               Skill Doc
             </a>
             <span>•</span>
-            <a href="/api/leaderboard" className="hover:text-cyan-400 transition-colors">
+            <a 
+              href="/api/leaderboard" 
+              className="transition-colors" 
+              style={{ color: colors.textSecondary }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = colors.hackerRed} 
+              onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
+            >
               Leaderboard
             </a>
           </motion.div>
@@ -214,9 +258,10 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.3 }}
-          className="text-center text-xs text-gray-600 mt-4"
+          className="text-center text-xs mt-4"
+          style={{ color: colors.muted, fontFamily: 'JetBrains Mono, monospace' }}
         >
-          Admin: <code className="text-gray-500">0x09Fe5ac53e9aB96755Bd550bC8AeD6b3584F526A</code>
+          Admin: <code style={{ color: colors.textSecondary }}>0x09Fe5ac53e9aB96755Bd550bC8AeD6b3584F526A</code>
         </motion.p>
       </div>
     </motion.div>

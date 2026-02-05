@@ -1,10 +1,9 @@
 "use client";
 import { useDataContext } from "@/context/DataContext";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/useToast";
-import { useAccount, useBalance } from "wagmi";
 import { motion } from "framer-motion";
+import { colors } from "@/theme";
 const words = [
   "CHAIN",
   "BLOCK",
@@ -87,16 +86,8 @@ export default function WordGame() {
   const [depositAmount, setDepositAmout] = useState(0);
   const [isClaim, setIsClaim] = useState(false);
   const { depositPlay, resolveGame, claimReward } = useDataContext();
-  const { address } = useAccount();
   const [shareText, setShareText] = useState("");
   const { showSuccess, showError, showInfo } = useToast();
-  const { data, isError, isLoading } = useBalance({
-    address,
-    watch: true,
-  });
-  const formatted = data?.formatted
-    ? parseFloat(data.formatted).toFixed(2)
-    : "0.00";
   useEffect(() => {
     const randomWord = words[Math.floor(Math.random() * words?.length)];
     setTargetWord(randomWord);
@@ -239,13 +230,17 @@ export default function WordGame() {
 
   return (
     <motion.div
-      className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 flex flex-col"
+      className="w-full max-w-4xl mx-auto rounded-lg shadow-lg p-6 flex flex-col hacker-border"
+      style={{ backgroundColor: colors.cardBg }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <div className="mb-4 p-3 bg-black rounded-lg flex justify-center items-center text-green-400 font-semibold">
-        {address?.slice(0, 6) + "..." + address?.slice(-4)}
+      <div 
+        className="mb-4 p-3 bg-black rounded-lg flex justify-center items-center font-semibold hacker-border glow-red"
+        style={{ color: colors.hackerRed }}
+      >
+        Player
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -253,19 +248,26 @@ export default function WordGame() {
           {board.map((row, rowIndex) =>
             row.map((letter, i) => {
               const className = (() => {
-                if (rowIndex >= attempts) return "border bg-white";
+                if (rowIndex >= attempts) return "border border-gray-800 bg-gray-900 text-gray-700";
                 const currentLetter = board[rowIndex][i];
                 const targetLetter = targetWord[i];
                 if (currentLetter === targetLetter)
-                  return "bg-green-500 text-white";
+                  return "text-white hacker-border glow-red";
                 else if (targetWord.includes(currentLetter))
-                  return "bg-yellow-400 text-white";
-                return "bg-gray-300 text-black";
+                  return "text-white hacker-border";
+                return "bg-gray-900 text-gray-500 border-gray-800";
               })();
               return (
                 <div
                   key={`${rowIndex}-${i}`}
                   className={`text-center text-xl font-bold rounded w-12 h-12 flex items-center justify-center ${className}`}
+                  style={
+                    className.includes("hacker-border glow-red")
+                      ? { backgroundColor: colors.hackerRed, borderColor: colors.hackerRed }
+                      : className.includes("hacker-border")
+                      ? { backgroundColor: colors.cardBg, borderColor: colors.hackerRed }
+                      : {}
+                  }
                 >
                   {letter}
                 </div>
@@ -366,23 +368,32 @@ export default function WordGame() {
         </div>
 
         <div className="flex justify-between items-center mt-8 mb-4">
-          <h1 className="text-xs font-bold uppercase">Winning Multiplier</h1>
-          <div className="bg-blue-400 text-white px-3 py-1 rounded font-bold text-xs">
+          <h1 className="text-xs font-bold uppercase" style={{ color: colors.textSecondary }}>Winning Multiplier</h1>
+          <div 
+            className="text-white px-3 py-1 rounded font-bold text-xs hacker-border glow-red"
+            style={{ backgroundColor: colors.hackerRed }}
+          >
             {multiplier}x
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-xs font-bold uppercase">Max Attempts</h1>
-          <div className="bg-red-400 text-white px-3 py-1 rounded font-bold text-xs">
+          <h1 className="text-xs font-bold uppercase" style={{ color: colors.textSecondary }}>Max Attempts</h1>
+          <div 
+            className="text-white px-3 py-1 rounded font-bold text-xs hacker-border glow-red"
+            style={{ backgroundColor: colors.hackerRed }}
+          >
             {maxAttempts}
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-xs font-bold uppercase">Balance</h1>
-          <div className="bg-red-400 text-white px-3 py-1 rounded font-bold text-xs">
-            {formatted} {data?.symbol}
+          <h1 className="text-xs font-bold uppercase" style={{ color: colors.textSecondary }}>Balance</h1>
+          <div 
+            className="text-white px-3 py-1 rounded font-bold text-xs hacker-border glow-red"
+            style={{ backgroundColor: colors.hackerRed }}
+          >
+            N/A
           </div>
         </div>
       </div>

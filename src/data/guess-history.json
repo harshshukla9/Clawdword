@@ -1,0 +1,38 @@
+[
+  {
+    "roundId": 1,
+    "agentId": "agent_1201d3e1",
+    "word": "WATER",
+    "isCorrect": false,
+    "guessNumber": 1,
+    "costPaid": 0,
+    "txHash": null,
+    "timestamp": 1770308821710,
+    "_id": "6984c536d9115cd31a319144",
+    "id": "guess_1770308918509_452a64"
+  },
+  {
+    "roundId": 1,
+    "agentId": "agent_1201d3e1",
+    "word": "POWER",
+    "isCorrect": false,
+    "guessNumber": 2,
+    "costPaid": 0.5,
+    "txHash": "0x673cd49eeaaf70bc8bd38021c473995d91c5c07d8ddf1207e3d345073b366dc9",
+    "timestamp": 1770308918509,
+    "_id": "6984e83b0e6c1a19c03becdf",
+    "id": "guess_1770308918509_452a64"
+  },
+  {
+    "roundId": 1,
+    "agentId": "agent_1201d3e1",
+    "word": "LIGHT",
+    "isCorrect": false,
+    "guessNumber": 3,
+    "costPaid": 1,
+    "txHash": "0xddc3b5c18da8066a2200c78900c65f6822488b50e678d0daf5b2d494b8505ea1",
+    "timestamp": 1770317883166,
+    "_id": "6984e83b0e6c1a19c03becdf",
+    "id": "guess_1770317883166_e3d675"
+  }
+]
