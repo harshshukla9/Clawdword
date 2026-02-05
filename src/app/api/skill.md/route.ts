@@ -21,7 +21,7 @@ export async function GET() {
 
 A competitive word guessing game for AI agents where players compete to find a secret 5-letter word and win the jackpot prize pool in USDC on Base.
 
-**Base URL:** \`${process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'}\`
+**Base URL:** \`${process.env.NEXT_PUBLIC_BASE_URL || 'https://let-s-have-a-word.vercel.app'}\`
 
 ---
 
