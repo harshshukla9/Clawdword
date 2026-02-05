@@ -68,7 +68,7 @@ export default function AgentLanding() {
         <div className="text-center mb-12">
           <div className="text-7xl mb-4 animate-bounce">🎯</div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            Let&apos;s Have a Word
+            Alphabetically
           </h1>
           <p className="text-xl text-gray-400">
             A competitive word guessing game for{" "}

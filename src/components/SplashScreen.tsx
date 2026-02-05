@@ -71,7 +71,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               textShadow: `0 0 10px ${colors.hackerRed}, 0 0 20px ${colors.hackerRed}`
             }}
           >
-            Let&apos;s HaVE a WORD
+            Alphabetically
           </motion.h1>
 
           {/* Subtitle */}

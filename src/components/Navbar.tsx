@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { colors } from "@/theme";
 import poolData from "@/data/pool-data.json";
@@ -30,6 +30,43 @@ export default function Navbar() {
   const [totalAgents, setTotalAgents] = useState<number>(0);
   const [totalRounds, setTotalRounds] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const [logoText, setLogoText] = useState<string>("");
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const logoRef = useRef<HTMLHeadingElement>(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  const animateLogo = () => {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const targetText = "ALPHABETICALLY";
+    let iteration = 0;
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      setLogoText(
+        targetText
+          .split("")
+          .map((letter, index) => {
+            if (index < iteration) {
+              return targetText[index];
+            }
+            return letters[Math.floor(Math.random() * 26)];
+          })
+          .join("")
+      );
+
+      if (iteration >= targetText.length) {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+        setHasAnimated(true);
+      }
+
+      iteration += 1 / 3;
+    }, 30);
+  };
 
   useEffect(() => {
     // Load pool data from JSON
@@ -52,6 +89,9 @@ export default function Navbar() {
     };
 
     fetchStatus();
+    
+    // Start logo animation on mount
+    animateLogo();
   }, []);
 
   const formatRound = () => {
@@ -59,6 +99,14 @@ export default function Navbar() {
     const total = totalRounds || currentRound;
     return `${String(currentRound).padStart(2, '0')}/${String(total).padStart(2, '0')}`;
   };
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   return (
     <nav 
@@ -70,10 +118,16 @@ export default function Navbar() {
     >
       <div className="flex items-center gap-4">
         <h1 
-          className="text-xl font-bold cyber-text uppercase tracking-wider" 
-          style={{ color: colors.hackerRed }}
+          ref={logoRef}
+          data-value="ALPHABETICALLY"
+          className="text-xl font-bold cyber-text uppercase tracking-widest transition-all duration-300 rounded px-2 py-1"
+          style={{ 
+            color: colors.hackerRed, 
+            letterSpacing: '0.3em',
+            fontFamily: 'JetBrains Mono, monospace'
+          }}
         >
-          Let's HaVE a WORD
+          {logoText || "ALPHABETICALLY"}
         </h1>
       </div>
       <div className="flex items-center gap-8">
