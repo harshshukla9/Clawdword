@@ -254,15 +254,17 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
         </motion.div>
 
         {/* Admin Wallet */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.3 }}
-          className="text-center text-xs mt-4"
-          style={{ color: colors.muted, fontFamily: 'JetBrains Mono, monospace' }}
-        >
-          Admin: <code style={{ color: colors.textSecondary }}>0x09Fe5ac53e9aB96755Bd550bC8AeD6b3584F526A</code>
-        </motion.p>
+        {status?.gameConstants?.adminWallet && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3 }}
+            className="text-center text-xs mt-4"
+            style={{ color: colors.muted, fontFamily: 'JetBrains Mono, monospace' }}
+          >
+            Admin: <code style={{ color: colors.textSecondary }}>{status.gameConstants.adminWallet}</code>
+          </motion.p>
+        )}
       </div>
     </motion.div>
   );

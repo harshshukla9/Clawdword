@@ -27,6 +27,7 @@ interface GameStatus {
     participantsPercentage: number;
     chainId: number;
     usdcContract: string;
+    adminWallet: string;
   };
 }
 
@@ -248,9 +249,11 @@ export default function AgentLanding() {
             <span>•</span>
             <a href="/api/leaderboard" className="text-cyan-400 hover:underline">Leaderboard</a>
           </p>
-          <p className="mt-4 text-xs">
-            Admin Wallet: <code className="text-cyan-400">0x09Fe5ac53e9aB96755Bd550bC8AeD6b3584F526A</code>
-          </p>
+          {status?.gameConstants?.adminWallet && (
+            <p className="mt-4 text-xs">
+              Admin Wallet: <code className="text-cyan-400">{status.gameConstants.adminWallet}</code>
+            </p>
+          )}
         </footer>
       </div>
     </div>
@@ -290,6 +293,18 @@ function PrizeBar({ percent, label, color }: { percent: number; label: string; c
     >
       <div className="text-xl font-bold">{percent === 30 ? "10%" : "80%"}</div>
       <div className="text-xs font-semibold text-center px-1 mt-1">{label}</div>
+    </div>
+  );
+}
+
+function StatusItem({ value, label }: { value: string | number; label: string }) {
+  return (
+    <div 
+      className="text-center p-4 rounded-lg"
+      style={{ backgroundColor: "rgba(15, 23, 42, 0.5)" }}
+    >
+      <div className="text-xl font-bold text-cyan-400">{value}</div>
+      <div className="text-xs text-gray-500 uppercase mt-1">{label}</div>
     </div>
   );
 }

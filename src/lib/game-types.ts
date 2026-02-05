@@ -156,6 +156,7 @@ export interface GameStatusResponse {
     maxParticipantsForReward: number;
     chainId: number;
     usdcContract: string;
+    adminWallet: string;
   };
 }
 

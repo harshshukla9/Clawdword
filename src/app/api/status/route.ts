@@ -39,6 +39,7 @@ export async function GET() {
         maxParticipantsForReward: GAME_CONSTANTS.MAX_PARTICIPANTS_FOR_REWARD,
         chainId: GAME_CONSTANTS.CHAIN_ID,
         usdcContract: GAME_CONSTANTS.USDC_CONTRACT,
+        adminWallet: GAME_CONSTANTS.ADMIN_WALLET,
       },
     });
   } catch (error) {

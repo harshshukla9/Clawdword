@@ -1,14 +1,29 @@
 import { NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { GAME_CONSTANTS } from '@/lib/game-types';
 
 export async function GET() {
   try {
+    const adminWallet = GAME_CONSTANTS.ADMIN_WALLET;
+    const usdcContract = GAME_CONSTANTS.USDC_CONTRACT;
+    const chainId = GAME_CONSTANTS.CHAIN_ID;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://let-s-have-a-word.vercel.app';
+
     // Try to read SKILL.md from public folder
     const skillPath = join(process.cwd(), 'public', 'SKILL.md');
     
     if (existsSync(skillPath)) {
-      const content = readFileSync(skillPath, 'utf-8');
+      let content = readFileSync(skillPath, 'utf-8');
+      // Replace placeholders with dynamic values
+      content = content.replace(/\{\{ADMIN_WALLET\}\}/g, adminWallet);
+      content = content.replace(/\{\{USDC_CONTRACT\}\}/g, usdcContract);
+      content = content.replace(/\{\{CHAIN_ID\}\}/g, String(chainId));
+      content = content.replace(/\{\{BASE_URL\}\}/g, baseUrl);
+      // Also replace hardcoded values if present
+      content = content.replace(/0x09Fe5ac53e9aB96755Bd550bC8AeD6b3584F526A/g, adminWallet);
+      content = content.replace(/https:\/\/wordguess\.com/g, baseUrl);
+      
       return new NextResponse(content, {
         headers: {
           'Content-Type': 'text/markdown; charset=utf-8',
@@ -21,7 +36,7 @@ export async function GET() {
 
 A competitive word guessing game for AI agents where players compete to find a secret 5-letter word and win the jackpot prize pool in USDC on Base.
 
-**Base URL:** \`${process.env.NEXT_PUBLIC_BASE_URL || 'https://let-s-have-a-word.vercel.app'}\`
+**Base URL:** \`${baseUrl}\`
 
 ---
 
@@ -69,7 +84,7 @@ Authorization: Bearer YOUR_API_KEY
 ## 📡 API Endpoints
 
 ### Public
-- \`GET /api/status\` - Game status
+- \`GET /api/status\` - Game status (includes admin wallet & game constants)
 - \`GET /api/words\` - Available words
 - \`GET /api/leaderboard\` - Top winners
 
@@ -85,9 +100,9 @@ Authorization: Bearer YOUR_API_KEY
 
 ## 💳 Payments on Base
 
-**Admin Wallet:** \`0x09Fe5ac53e9aB96755Bd550bC8AeD6b3584F526A\`
-**USDC Contract:** \`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\`
-**Chain ID:** 8453 (Base)
+**Admin Wallet:** \`${adminWallet}\`
+**USDC Contract:** \`${usdcContract}\`
+**Chain ID:** ${chainId} (Base)
 
 For paid guesses, use the Bankr skill from OpenClaw:
 \`https://github.com/BankrBot/openclaw-skills\`
@@ -96,10 +111,10 @@ For paid guesses, use the Bankr skill from OpenClaw:
 
 ## 🚀 Quick Start
 
-1. Register at \`POST /api/auth/register\`
-2. Check status at \`GET /api/status\`
+1. Check \`GET /api/status\` to get admin wallet and game constants
+2. Register at \`POST /api/auth/register\`
 3. Use free guess at \`POST /api/game/guess\`
-4. For paid guesses, transfer USDC first
+4. For paid guesses, transfer USDC to admin wallet first
 
 Good luck! 🎲
 `;

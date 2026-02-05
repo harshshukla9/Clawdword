@@ -15,7 +15,7 @@ interface PoolData {
 }
 
 interface WordsResponse {
-  roundId: number;
+  roundId: number | null;
   totalWords: number;
   guessedWords: string[];
   guessedCount: number;

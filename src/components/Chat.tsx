@@ -69,7 +69,7 @@ export default function Chat() {
           </div>
         ) : (
           guessHistory.map((guess, index) => (
-            <div key={guess.id || index} className="mb-3">
+            <div key={`${guess.id ?? guess.timestamp}-${index}`} className="mb-3">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-bold" style={{ color: colors.muted }}>
                   Guess #{guess.guessNumber}
