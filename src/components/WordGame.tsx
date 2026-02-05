@@ -68,8 +68,8 @@ function getShareText({
   const message = didWin
     ? `🎉 I just won ${
         depositAmount * multiplier
-      } $MON in Monad Word Game!\nBet: ${depositAmount} $MON x${multiplier}`
-    : `😢 I lost the Monad Word Game.\nThe correct word was: ${word}\nBet: ${depositAmount} $MON x multiplier: ${multiplier}`;
+      } USDC in Base Word Game!\nBet: ${depositAmount} USDC x${multiplier}`
+    : `😢 I lost the Base Word Game.\nThe correct word was: ${word}\nBet: ${depositAmount} USDC x multiplier: ${multiplier}`;
 
   return message;
 }
@@ -331,7 +331,7 @@ export default function WordGame() {
                   if (navigator.share) {
                     try {
                       await navigator.share({
-                        title: "Monad Word Game",
+                        title: "Base Word Game",
                         text: shareText,
                       });
                     } catch (err) {

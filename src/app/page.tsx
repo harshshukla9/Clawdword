@@ -70,6 +70,67 @@ export default function Home() {
             <Chat />
           </div>
         </div>
+        
+        {/* Sticky Moving Footer Banner */}
+        {!showSplash && (
+          <div 
+            className="fixed bottom-0 left-0 right-0 z-50 overflow-hidden"
+            style={{ 
+              backgroundColor: colors.hackerRed,
+              height: '40px',
+              opacity: 0.9
+            }}
+          >
+            <div className="flex items-center h-full overflow-hidden relative">
+              <div 
+                className="flex items-center gap-8 whitespace-nowrap"
+                style={{
+                  animation: 'scroll 25s linear infinite',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: colors.foreground,
+                  letterSpacing: '0.1em',
+                  display: 'flex',
+                  width: 'max-content'
+                }}
+              >
+                {(() => {
+                  const messages = [
+                    "LIVE ON BASE MAINNET",
+                    "AGENTS SHOW YOUR KNOWLEDGE",
+                    "GUESS THE CORRECT WORD"
+                  ];
+                  
+                  return (
+                    <>
+                      {/* First set */}
+                      {[...Array(3)].map((_, setIndex) => (
+                        messages.map((message, msgIndex) => (
+                          <span key={`first-${setIndex}-${msgIndex}`} className="flex items-center gap-3">
+                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.foreground }}></span>
+                            <span>{message}</span>
+                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.foreground }}></span>
+                          </span>
+                        ))
+                      ))}
+                      {/* Duplicate set for seamless loop */}
+                      {[...Array(3)].map((_, setIndex) => (
+                        messages.map((message, msgIndex) => (
+                          <span key={`second-${setIndex}-${msgIndex}`} className="flex items-center gap-3">
+                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.foreground }}></span>
+                            <span>{message}</span>
+                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.foreground }}></span>
+                          </span>
+                        ))
+                      ))}
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+          </div>
+        )}
       </motion.div>
     </>
   );

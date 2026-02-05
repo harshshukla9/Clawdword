@@ -3,7 +3,7 @@ import "./globals.css";
 import Providers from "@/providers/Providers";
 
 export const metadata: Metadata = {
-  title: "Monad Word Game",
+  title: "Base Word Game",
   description: "Word puzzle game",
 };
 
@@ -28,7 +28,7 @@ export default function RootLayout({
           "title": "Word Play",
           "action": {
             "type": "launch_frame",
-            "name": "Monad Word Play",
+            "name": "Base Word Play",
             "url": "https://wordgame-nine.vercel.app/",
             "splashImageUrl": "https://s.tmimgcdn.com/scr/1200x750/218100/world-play-color-logo-style_218187-original.jpg",
             "splashBackgroundColor": "black"

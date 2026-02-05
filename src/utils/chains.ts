@@ -1,8 +1,7 @@
 import { http } from "viem";
-import { monadTestnet, monadMainnet } from "@/app/config/chains";
+import { baseMainnet } from "@/app/config/chains";
 
-export const chainArray = [monadTestnet, monadMainnet];
+export const chainArray = [baseMainnet];
 export const transportsObject = {
-  [monadTestnet.id]: http(),
-  [monadMainnet.id]: http()
+  [baseMainnet.id]: http()
 };

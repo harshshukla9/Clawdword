@@ -5,7 +5,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useBalance, useDisconnect } from "wagmi";
 import { FaCopy, FaSignOutAlt, FaExternalLinkAlt, FaChevronDown, FaWallet, FaExclamationTriangle } from "react-icons/fa";
 import { formatEther } from "viem";
-import { monadTestnet, monadMainnet } from "@/app/config/chains";
+import { baseMainnet } from "@/app/config/chains";
 import { colors } from "@/theme";
 import { useToast } from "@/hooks/useToast";
 
@@ -40,9 +40,7 @@ export function WalletConnect() {
   };
 
   const viewOnExplorer = (address: string, chainId?: number) => {
-    const explorerUrl = chainId === monadMainnet.id 
-      ? monadMainnet.blockExplorers.default.url 
-      : monadTestnet.blockExplorers.default.url;
+    const explorerUrl = baseMainnet.blockExplorers.default.url;
     window.open(`${explorerUrl}/address/${address}`, "_blank");
     setIsDropdownOpen(false);
   };
@@ -68,7 +66,7 @@ export function WalletConnect() {
     });
 
     // Check if wallet is connected to a supported chain
-    const isCorrectChain = chain?.id === monadTestnet.id || chain?.id === monadMainnet.id;
+    const isCorrectChain = chain?.id === baseMainnet.id;
 
     return (
       <div className="relative" ref={dropdownRef}>
@@ -204,7 +202,7 @@ export function WalletConnect() {
             authenticationStatus === 'authenticated');
 
         // Check if wallet is connected to the correct chain
-        const isCorrectChain = chain?.id === monadTestnet.id;
+        const isCorrectChain = chain?.id === baseMainnet.id;
 
         return (
           <div
@@ -257,7 +255,7 @@ export function WalletConnect() {
                         <div className="flex-1">
                           <div className="text-xs font-semibold text-yellow-500 mb-1">Wrong Network</div>
                           <div className="text-xs text-yellow-400/80 mb-2">
-                            Please switch to Monad Testnet or Monad Mainnet to continue.
+                            Please switch to Base Mainnet to continue.
                           </div>
                           <button
                             onClick={openChainModal}
