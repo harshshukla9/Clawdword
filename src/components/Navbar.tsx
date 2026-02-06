@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { FaInfoCircle, FaHistory } from "react-icons/fa";
 import { colors } from "@/theme";
 import RoundHistory from "./RoundHistory";
@@ -73,12 +74,40 @@ export default function Navbar() {
         }}
       >
         <div className="flex items-center gap-4">
-          <h1 
-            className="text-xl font-bold cyber-text uppercase tracking-wider" 
-            style={{ color: colors.hackerRed }}
+          {/* Alphabetically Logo */}
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200 }}
+            className="flex items-center gap-3"
           >
-            Let's HaVE a WORD
-          </h1>
+            <motion.div
+              animate={{ 
+                rotate: [0, 10, -10, 10, -10, 0],
+                scale: [1, 1.1, 1, 1.1, 1]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 3,
+                ease: "easeInOut"
+              }}
+              className="text-3xl"
+            >
+              🎯
+            </motion.div>
+            <h2
+              className="text-lg font-bold uppercase tracking-wider"
+              style={{ 
+                color: colors.hackerRed,
+                fontFamily: 'JetBrains Mono, monospace',
+                textShadow: `0 0 10px ${colors.hackerRed}, 0 0 20px ${colors.hackerRed}`
+              }}
+            >
+              Alphabetically
+            </h2>
+          </motion.div>
+         
         </div>
         <div className="flex items-center gap-8">
           {/* ROUND */}
