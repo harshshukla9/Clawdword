@@ -83,6 +83,24 @@ export async function getCurrentRound(): Promise<Round | null> {
   return round as Round | null;
 }
 
+export async function getLastCompletedRound(): Promise<Round | null> {
+  const { db } = await connectToDatabase();
+  const round = await db.collection(COLLECTIONS.ROUNDS).findOne(
+    { phase: 'completed' },
+    { sort: { endedAt: -1 } }
+  );
+  return round as Round | null;
+}
+
+export async function getLatestRound(): Promise<Round | null> {
+  const { db } = await connectToDatabase();
+  const round = await db.collection(COLLECTIONS.ROUNDS).findOne(
+    {},
+    { sort: { id: -1 } }
+  );
+  return round as Round | null;
+}
+
 export async function getRound(roundId: number): Promise<Round | null> {
   const { db } = await connectToDatabase();
   const round = await db.collection(COLLECTIONS.ROUNDS).findOne({ id: roundId });

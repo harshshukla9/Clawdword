@@ -1,16 +1,53 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { colors } from "@/theme";
-import guessHistoryData from "@/data/guess-history.json";
-import type { Guess } from "@/lib/game-types";
+
+interface GuessWithAgent {
+  id: string;
+  roundId: number;
+  agentId: string;
+  agentName: string;
+  word: string;
+  isCorrect: boolean;
+  guessNumber: number;
+  costPaid: number;
+  txHash: string | null;
+  timestamp: number;
+}
 
 export default function Chat() {
-  const [guessHistory, setGuessHistory] = useState<Guess[]>([]);
+  const [guessHistory, setGuessHistory] = useState<GuessWithAgent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const prevGuessCountRef = useRef(0);
 
   useEffect(() => {
-    // Load guess history from JSON
-    setGuessHistory(guessHistoryData as Guess[]);
+    fetchGuessHistory();
+    const interval = setInterval(fetchGuessHistory, 5000); // Poll every 5 seconds
+    return () => clearInterval(interval);
   }, []);
+
+  // Auto-scroll to bottom when new guesses are added
+  useEffect(() => {
+    if (guessHistory.length > prevGuessCountRef.current && scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+    prevGuessCountRef.current = guessHistory.length;
+  }, [guessHistory]);
+
+  async function fetchGuessHistory() {
+    try {
+      const response = await fetch('/api/game/guesses');
+      if (response.ok) {
+        const data = await response.json();
+        setGuessHistory(data.guesses || []);
+      }
+    } catch (error) {
+      console.error('Error fetching guess history:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -43,27 +80,48 @@ export default function Chat() {
         }}
       >
         <h2 className="text-lg font-bold">Guess History</h2>
-        <div 
-          className="w-4 h-4 border-2 rounded-full glow-red"
-          style={{ borderColor: colors.hackerRed, backgroundColor: colors.hackerRed }}
-        ></div>
+        <div className="flex items-center gap-2">
+          {guessHistory.length > 0 && (
+            <span className="text-xs" style={{ color: colors.muted }}>
+              {guessHistory.length} guesses
+            </span>
+          )}
+          <div 
+            className={`w-4 h-4 border-2 rounded-full ${loading ? 'animate-pulse' : ''}`}
+            style={{ 
+              borderColor: colors.hackerRed, 
+              backgroundColor: loading ? 'transparent' : colors.hackerRed 
+            }}
+          ></div>
+        </div>
       </div>
       
       <div 
+        ref={scrollRef}
         className="flex-1 overflow-y-auto p-4 space-y-3 history-scroll"
         style={{
           scrollbarWidth: 'thin',
           scrollbarColor: `${colors.hackerRed} ${colors.cardBg}`
         }}
       >
-        {guessHistory.length === 0 ? (
+        {loading && guessHistory.length === 0 ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="flex flex-col items-center gap-3">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2" style={{ borderColor: colors.hackerRed }}></div>
+              <span className="text-sm" style={{ color: colors.muted }}>Loading history...</span>
+            </div>
+          </div>
+        ) : guessHistory.length === 0 ? (
           <div className="text-center mt-2" style={{ color: colors.muted }}>
             <div 
-              className="rounded-lg px-4 py-3 inline-block hacker-border glow-red"
-              style={{ backgroundColor: colors.hackerRed }}
+              className="rounded-lg px-4 py-3 inline-block hacker-border"
+              style={{ backgroundColor: colors.cardBorder }}
             >
-              <p className="text-sm text-white">
-                No guess history available
+              <p className="text-sm" style={{ color: colors.foreground }}>
+                No guesses yet
+              </p>
+              <p className="text-xs mt-1" style={{ color: colors.muted }}>
+                Waiting for agents to make guesses...
               </p>
             </div>
           </div>
@@ -72,45 +130,56 @@ export default function Chat() {
             <div key={`${guess.id ?? guess.timestamp}-${index}`} className="mb-3">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-bold" style={{ color: colors.muted }}>
-                  Guess #{guess.guessNumber}
+                  #{guess.guessNumber}
                 </span>
                 <span className="text-xs" style={{ color: colors.muted, opacity: 0.7 }}>
                   {formatTimestamp(guess.timestamp)}
                 </span>
                 {guess.isCorrect && (
                   <span 
-                    className="text-xs px-2 py-0.5 rounded hacker-border"
+                    className="text-xs px-2 py-0.5 rounded hacker-border animate-pulse"
                     style={{ backgroundColor: colors.cyberGreen, color: '#000000' }}
                   >
-                    ✓ CORRECT
+                    🎉 WINNER!
                   </span>
                 )}
               </div>
               <div 
-                className="rounded-lg px-3 py-2 space-y-2"
-                style={{ backgroundColor: colors.cardBorder }}
+                className={`rounded-lg px-3 py-2 space-y-2 ${guess.isCorrect ? 'hacker-border' : ''}`}
+                style={{ 
+                  backgroundColor: guess.isCorrect ? 'rgba(0, 255, 0, 0.1)' : colors.cardBorder,
+                  borderColor: guess.isCorrect ? colors.cyberGreen : undefined
+                }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold" style={{ color: colors.foreground }}>
+                    <span 
+                      className="text-lg font-bold" 
+                      style={{ color: guess.isCorrect ? colors.cyberGreen : colors.foreground }}
+                    >
                       {guess.word}
                     </span>
                     {!guess.isCorrect && (
-                      <span className="text-xs" style={{ color: colors.muted }}>
+                      <span className="text-xs" style={{ color: colors.hackerRed }}>
                         ✗
                       </span>
                     )}
                   </div>
                   <div 
                     className="text-xs px-2 py-1 rounded"
-                    style={{ backgroundColor: colors.cardBg }}
+                    style={{ 
+                      backgroundColor: guess.costPaid === 0 ? 'rgba(0, 255, 0, 0.2)' : colors.cardBg,
+                      color: guess.costPaid === 0 ? colors.cyberGreen : colors.foreground
+                    }}
                   >
                     {guess.costPaid === 0 ? "FREE" : `${guess.costPaid} USDC`}
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-xs" style={{ color: colors.muted }}>
-                  <span>Agent: {guess.agentId.slice(0, 12)}...</span>
-                  <span>Round: #{guess.roundId}</span>
+                  <span title={guess.agentId}>
+                    Agent: <span style={{ color: colors.foreground }}>{guess.agentName}</span>
+                  </span>
+                  <span>R#{guess.roundId}</span>
                 </div>
                 {guess.txHash && (
                   <a
