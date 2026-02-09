@@ -205,6 +205,7 @@ export async function getAgentPackState(
   lastPackPurchasedAt: number | null;
   canPurchasePack: boolean;
   nextPackAvailableAt: number | null;
+  packSize?: number; // when active pack exists (3 or 6)
 }> {
   const { db } = await connectToDatabase();
   const now = Date.now();
@@ -232,6 +233,7 @@ export async function getAgentPackState(
 
   return {
     packGuessesRemaining,
+    packSize: activePack?.packSize,
     lastPackPurchasedAt,
     canPurchasePack,
     nextPackAvailableAt,
@@ -315,6 +317,9 @@ export async function getAgentRoundState(agentId: string, roundId: number): Prom
 
   if (guesses.length === 0) return null;
 
+  // Paid ladder: only free guess + pay-per-guess (txHash); pack guesses do not advance cost
+  const paidLadderCount = guesses.filter((g: { usedFromPack?: boolean }) => !g.usedFromPack).length;
+
   // Get participation order
   const allGuesses = await db.collection(COLLECTIONS.GUESSES)
     .find({ roundId })
@@ -333,6 +338,7 @@ export async function getAgentRoundState(agentId: string, roundId: number): Prom
     agentId,
     roundId,
     guessCount: guesses.length,
+    paidLadderCount,
     freeGuessUsed: guesses.length >= GAME_CONSTANTS.FREE_GUESS_COUNT,
     guesses: guesses.map(g => g.word),
     totalPaid: guesses.reduce((sum, g) => sum + (g.costPaid || 0), 0),
@@ -369,13 +375,16 @@ export async function submitGuess(
     return { success: false, error: 'Word already guessed this round' };
   }
 
-  // Get agent's current state
+  // Get agent's current state (paidLadderCount = free + pay-per-guess only; pack is separate)
   const state = await getAgentRoundState(agentId, round.id);
   const guessNumber = (state?.guessCount || 0) + 1;
-  const cost = calculateGuessCost(guessNumber);
+  const paidLadderCount = state?.paidLadderCount ?? 0;
+  const cost = calculateGuessCost(paidLadderCount + 1);
 
   let costPaid = 0;
   let usedFromPack = false;
+  let packSize: number | undefined;
+  let packGuessIndex: number | undefined;
 
   if (guessNumber <= GAME_CONSTANTS.FREE_GUESS_COUNT) {
     costPaid = 0;
@@ -387,6 +396,8 @@ export async function submitGuess(
         error: 'No pack guesses remaining. Purchase a pack or pay per guess with txHash.',
       };
     }
+    packSize = packState.packSize ?? 3;
+    packGuessIndex = packSize - packState.packGuessesRemaining + 1;
     const consumed = await useOnePackGuess(agentId, round.id);
     if (!consumed) {
       return { success: false, error: 'Failed to use pack guess.' };
@@ -405,7 +416,7 @@ export async function submitGuess(
   // Check if correct
   const isCorrect = normalizedWord === round.secretWord;
 
-  // Create guess record
+  // Create guess record (packGuessIndex/packSize for "1/3", "2/3", "3/3" display when usedFromPack)
   const guess: Guess = {
     id: `guess_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`,
     roundId: round.id,
@@ -416,6 +427,9 @@ export async function submitGuess(
     costPaid,
     txHash: txHash || undefined,
     usedFromPack: usedFromPack || undefined,
+    ...(usedFromPack && packSize != null && packGuessIndex != null
+      ? { packSize, packGuessIndex }
+      : {}),
     timestamp: Date.now(),
   };
 

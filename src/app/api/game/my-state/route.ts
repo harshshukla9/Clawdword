@@ -30,13 +30,15 @@ export async function GET(request: NextRequest) {
       const state = await getAgentRoundState(agent.id, round.id);
       const packState = await getAgentPackState(agent.id, round.id);
       const guessCount = state?.guessCount || 0;
-      const nextGuessCost = calculateGuessCost(guessCount + 1);
+      const paidLadderCount = state?.paidLadderCount ?? 0;
+      const nextGuessCost = calculateGuessCost(paidLadderCount + 1);
 
       currentRoundState = {
         roundId: round.id,
         phase: round.phase,
         jackpot: round.jackpot,
         guessCount,
+        paidLadderCount,
         freeGuessUsed: state?.freeGuessUsed || false,
         nextGuessCost,
         myGuesses: state?.guesses || [],

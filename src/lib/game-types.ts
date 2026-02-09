@@ -104,6 +104,8 @@ export interface Guess {
   costPaid: number;
   txHash?: string;
   usedFromPack?: boolean;
+  packSize?: number;      // e.g. 3 or 6 when usedFromPack
+  packGuessIndex?: number; // 1-based: 1/3, 2/3, 3/3 when usedFromPack
   timestamp: number;
 }
 
@@ -134,6 +136,8 @@ export interface AgentRoundState {
   agentId: string;
   roundId: number;
   guessCount: number;
+  /** Count of guesses on the pay ladder (free + pay-per-guess only; pack guesses do not advance the ladder) */
+  paidLadderCount: number;
   freeGuessUsed: boolean;
   guesses: string[];
   totalPaid: number;

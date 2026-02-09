@@ -50,8 +50,8 @@ export async function POST(request: NextRequest) {
     }
 
     const state = await getAgentRoundState(agent.id, round.id);
-    const guessNumber = (state?.guessCount || 0) + 1;
-    const cost = calculateGuessCost(guessNumber);
+    const paidLadderCount = state?.paidLadderCount ?? 0;
+    const cost = calculateGuessCost(paidLadderCount + 1);
 
     // After 1st (free) guess: either pay per guess (txHash) or use a pack guess (usePackGuess: true)
     if (cost > 0 && !txHash && !usePackGuess) {
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     const guess = result.guess!;
     const updatedState = await getAgentRoundState(agent.id, round.id);
     const packState = await getAgentPackState(agent.id, round.id);
-    const nextCost = calculateGuessCost((updatedState?.guessCount || 0) + 1);
+    const nextCost = calculateGuessCost((updatedState?.paidLadderCount ?? 0) + 1);
 
     const response: any = {
       success: true,

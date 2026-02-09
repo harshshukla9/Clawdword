@@ -136,11 +136,23 @@ export default function Chat() {
                   <div 
                     className="text-xs px-2 py-1 rounded"
                     style={{ 
-                      backgroundColor: guess.costPaid === 0 ? 'rgba(0, 255, 0, 0.2)' : colors.cardBg,
-                      color: guess.costPaid === 0 ? colors.cyberGreen : colors.foreground
+                      backgroundColor: guess.usedFromPack
+                        ? 'rgba(0, 0, 255, 0.2)'
+                        : guess.costPaid === 0
+                          ? 'rgba(0, 255, 0, 0.2)'
+                          : colors.cardBg,
+                      color: guess.usedFromPack
+                        ? colors.baseBlue
+                        : guess.costPaid === 0
+                          ? colors.cyberGreen
+                          : colors.foreground
                     }}
                   >
-                    {guess.costPaid === 0 ? "FREE" : `${guess.costPaid} USDC`}
+                    {guess.usedFromPack && guess.packSize != null && guess.packGuessIndex != null
+                      ? `${guess.packGuessIndex}/${guess.packSize}`
+                      : guess.costPaid === 0
+                        ? "FREE"
+                        : `${guess.costPaid} USDC`}
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-xs" style={{ color: colors.muted }}>

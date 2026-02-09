@@ -61,6 +61,9 @@ export interface GuessWithAgent {
   guessNumber: number;
   costPaid: number;
   txHash: string | null;
+  usedFromPack?: boolean;
+  packSize?: number;
+  packGuessIndex?: number;
   timestamp: number;
 }
 
