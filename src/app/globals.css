@@ -3,27 +3,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
+  --background: #0a0b0d;
   --foreground: #ffffff;
-  --somnia-purple: #ff0040;
-  --monad-purple: #ff0040; /* Keep for backward compatibility */
-  --hacker-red: #ff0040;
-  --hacker-red-dark: #cc0033;
-  --hacker-red-light: #ff3366;
-  --hacker-red-glow: #ff0040;
-  --card-bg: #0a0a0a;
-  --card-border: #1a0000;
-  --card-border-glow: #ff0040;
-  --muted: #666666;
-  --text-secondary: #999999;
-  --cyber-blue: #00d4ff;
-  --cyber-green: #00ff41;
+  --base-blue: #0000ff;
+  --base-blue-dark: #0000cc;
+  --base-blue-light: #3c8aff;
+  --somnia-purple: #0000ff;
+  --monad-purple: #0000ff;
+  --hacker-red: #0000ff;
+  --hacker-red-dark: #0000cc;
+  --hacker-red-light: #3c8aff;
+  --hacker-red-glow: #3c8aff;
+  --card-bg: #0f1114;
+  --card-border: #1a1d24;
+  --card-border-glow: #0000ff;
+  --muted: #5b616e;
+  --text-secondary: #717886;
+  --cyber-blue: #3c8aff;
+  --cyber-green: #66c800;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 @theme {
+  --color-base-blue: var(--base-blue);
   --color-somnia-purple: var(--somnia-purple);
-  --color-monad-purple: var(--monad-purple); /* Keep for backward compatibility */
+  --color-monad-purple: var(--monad-purple);
   --color-hacker-red: var(--hacker-red);
   --color-hacker-red-dark: var(--hacker-red-dark);
   --color-hacker-red-light: var(--hacker-red-light);
@@ -60,7 +64,7 @@ body {
   position: relative;
 }
 
-/* Hacker theme background effect */
+/* Base theme background effect */
 body::before {
   content: '';
   position: fixed;
@@ -69,8 +73,8 @@ body::before {
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 20% 50%, rgba(255, 0, 64, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(255, 0, 64, 0.03) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, rgba(0, 0, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(60, 138, 255, 0.04) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
@@ -115,19 +119,19 @@ body::before {
   animation: slide-in-from-right 0.3s ease-out forwards;
 }
 
-/* Hacker/cyberpunk button styles */
+/* Base theme button styles */
 .retro {
 	display: inline-block;
 	vertical-align: middle;
 	padding: 0.375rem 0.75rem;
-	background: #000000;
-	color: #ff0040;
-	border: 2px solid #ff0040 !important;
+	background: #0a0b0d;
+	color: #0000ff;
+	border: 2px solid #0000ff !important;
 	border-radius: 0;
 	box-shadow: 
-		0 0 10px rgba(255, 0, 64, 0.5),
-		0 0 20px rgba(255, 0, 64, 0.3),
-		inset 0 0 10px rgba(255, 0, 64, 0.1);
+		0 0 10px rgba(0, 0, 255, 0.4),
+		0 0 20px rgba(0, 0, 255, 0.2),
+		inset 0 0 10px rgba(0, 0, 255, 0.08);
 	padding-right: 5%;
 	text-transform: uppercase;
 	letter-spacing: 1px;
@@ -137,19 +141,19 @@ body::before {
 
 .retro:hover {
 	color: #ffffff;
-	background: #ff0040;
+	background: #0000ff;
 	cursor: pointer;
 	box-shadow: 
-		0 0 20px rgba(255, 0, 64, 0.8),
-		0 0 40px rgba(255, 0, 64, 0.5),
-		inset 0 0 20px rgba(255, 0, 64, 0.2);
+		0 0 20px rgba(0, 0, 255, 0.6),
+		0 0 40px rgba(0, 0, 255, 0.3),
+		inset 0 0 20px rgba(0, 0, 255, 0.15);
 	transform: translateY(-2px);
 }
 
 .retro:active {
 	box-shadow: 
-		0 0 5px rgba(255, 0, 64, 0.5),
-		inset 0 0 5px rgba(255, 0, 64, 0.2);
+		0 0 5px rgba(0, 0, 255, 0.4),
+		inset 0 0 5px rgba(0, 0, 255, 0.1);
 	transform: translateY(0) translateX(2px);
 }
 
@@ -258,17 +262,17 @@ button {
 }
 
 .history-scroll::-webkit-scrollbar-thumb {
-  background: var(--hacker-red);
+  background: var(--base-blue);
   border-radius: 4px;
   opacity: 0.6;
 }
 
 .history-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--hacker-red);
+  background: var(--base-blue);
   opacity: 0.8;
 }
 
-/* Hacker theme utilities */
+/* Base theme utilities */
 @layer utilities {
   .bg-monad-purple {
     background-color: var(--monad-purple);
@@ -287,25 +291,25 @@ button {
   }
   
   .glow-red {
-    box-shadow: 0 0 10px rgba(255, 0, 64, 0.5), 0 0 20px rgba(255, 0, 64, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.4), 0 0 20px rgba(0, 0, 255, 0.2);
   }
   
   .glow-red-strong {
-    box-shadow: 0 0 20px rgba(255, 0, 64, 0.8), 0 0 40px rgba(255, 0, 64, 0.5);
+    box-shadow: 0 0 20px rgba(0, 0, 255, 0.6), 0 0 40px rgba(0, 0, 255, 0.3);
   }
   
   .hacker-border {
-    border: 1px solid var(--hacker-red);
+    border: 1px solid var(--base-blue);
     box-shadow: 
-      0 0 5px rgba(255, 0, 64, 0.3),
-      inset 0 0 5px rgba(255, 0, 64, 0.1);
+      0 0 5px rgba(0, 0, 255, 0.25),
+      inset 0 0 5px rgba(0, 0, 255, 0.08);
   }
   
   .cyber-text {
     text-shadow: 
-      0 0 5px var(--hacker-red),
-      0 0 10px var(--hacker-red),
-      0 0 15px var(--hacker-red);
+      0 0 5px var(--base-blue),
+      0 0 10px var(--base-blue),
+      0 0 15px var(--base-blue);
   }
 }
 
@@ -329,33 +333,33 @@ button {
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(255, 0, 64, 0.3),
+    rgba(0, 0, 255, 0.25),
     transparent
   );
   animation: scanline 8s linear infinite;
   pointer-events: none;
 }
 
-/* Glitch effect */
+/* Glitch effect - Base blue */
 @keyframes glitch {
   0%, 100% {
     text-shadow: 
-      2px 0 var(--hacker-red),
+      2px 0 var(--base-blue),
       -2px 0 var(--cyber-blue);
   }
   25% {
     text-shadow: 
-      -2px 0 var(--hacker-red),
+      -2px 0 var(--base-blue),
       2px 0 var(--cyber-blue);
   }
   50% {
     text-shadow: 
-      2px 0 var(--hacker-red),
+      2px 0 var(--base-blue),
       -2px 0 var(--cyber-blue);
   }
   75% {
     text-shadow: 
-      -2px 0 var(--hacker-red),
+      -2px 0 var(--base-blue),
       2px 0 var(--cyber-blue);
   }
 }

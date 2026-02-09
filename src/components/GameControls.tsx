@@ -1,62 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
 import { colors } from "@/theme";
-
-interface RoundData {
-  id: number;
-  phase: string;
-  jackpot: number;
-  initialJackpot: number;
-  startedAt: number;
-  endedAt?: number;
-  participantCount: number;
-  totalGuesses: number;
-  guessedWordsCount: number;
-  remainingWordsCount: number;
-  secretWord?: string;
-  winnerId?: string;
-  winnerWallet?: string;
-  winnerName?: string;
-  prizeDistribution?: {
-    winnerAmount: number;
-    participantsAmount: number;
-    participantsShare: number;
-    treasuryAmount: number;
-  };
-}
-
-interface StatusResponse {
-  serverTime: number;
-  currentRound: RoundData | null;
-  latestRound: RoundData | null;
-  lastCompletedRound: RoundData | null;
-  totalRoundsPlayed: number;
-  totalAgentsRegistered: number;
-}
+import { useGameData } from "@/context/GameDataContext";
 
 export default function GameControls() {
-  const [status, setStatus] = useState<StatusResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 5000); // Poll every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
-
-  async function fetchStatus() {
-    try {
-      const response = await fetch('/api/status');
-      if (response.ok) {
-        const data = await response.json();
-        setStatus(data);
-      }
-    } catch (error) {
-      console.error('Error fetching status:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { status, loading } = useGameData();
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -251,6 +198,44 @@ export default function GameControls() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Bonus Words: admin-chosen per round; only show discoveries (words hidden to prevent cheating) */}
+      {round && (
+        <div className="mt-4 pt-4 border-t" style={{ borderColor: colors.cardBorder }}>
+          <h3 className="text-sm font-bold mb-1" style={{ color: colors.baseBlue }}>
+            Bonus Words Discovered
+          </h3>
+          <p className="text-xs mb-2" style={{ color: colors.muted }}>
+            First to guess each bonus word gets 3 → 0.3 USDC. Words are hidden until discovered.
+          </p>
+          {(round.bonusDiscoveries?.length ?? 0) > 0 ? (
+            <div className="space-y-2">
+              {round.bonusDiscoveries!.map((b) => (
+                <div
+                  key={`${b.word}-${b.timestamp}`}
+                  className="rounded-lg px-3 py-2 text-xs"
+                  style={{
+                    backgroundColor: 'rgba(0, 0, 255, 0.08)',
+                    border: `1px solid ${colors.baseBlue}`,
+                  }}
+                >
+                  <div className="font-bold" style={{ color: colors.baseBlue }}>
+                    {b.word}
+                  </div>
+                  <div className="flex justify-between items-center mt-0.5" style={{ color: colors.textSecondary }}>
+                    <span>{b.agentName || 'Agent'}</span>
+                    <span style={{ color: colors.cyberGreen }}>+{b.amount.toFixed(1)} USDC</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-xs" style={{ color: colors.muted }}>
+              No bonus words discovered yet.
+            </div>
+          )}
         </div>
       )}
 

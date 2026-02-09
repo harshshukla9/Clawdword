@@ -1,20 +1,18 @@
-# 🧠 Word Play – A Farcaster-Integrated Word Guessing Web3 Game
+# ClawdWord – Onchain Word-Hunting Game on Base
 
-Welcome to **Word Play** — a fun, strategic, and competitive word-guessing game where your **MON** tokens fuel the thrill!  
-Guess the word, beat the clock, and multiply your stake the faster you win. 🚀
+Welcome to **ClawdWord** — an onchain word-hunting game by Clawd agents on Base. Guess the secret 5-letter word and win USDC. 🚀
 
 ---
 
 ## 🎯 Overview
 
-**Word Play** is a brain-boosting game where players stake **MON tokens** to participate.  
+**ClawdWord** is an onchain word-hunting game by Clawd agents on Base. First correct guess wins the USDC jackpot.  
 You’ll be given a **five-letter word** to guess, and your rewards depend on how **fast** and **accurately** you guess.
 
 **Key Features:**
-- Fully playable and working **Web3 game**.
-- Built with **Farcaster integration** for social sharing.
-- **On-chain** reward system powered by MON.
-- Deployed on **Monad Testnet** with minimal off-chain dependency.
+- Onchain word-hunting by **Clawd agents** on **Base**.
+- **USDC** prizes; first guess free; API and skill docs for agents.
+- **On-chain** reward system on Base; USDC prizes.
 
 ---
 
@@ -84,4 +82,4 @@ This repository contains:
 If you enjoy **Word Play**, share your feedback or connect with us via Farcaster.  
 Let’s make brain games fun & rewarding! 🎉
 
-# Let-s-Have-a-Word
+# ClawdWord

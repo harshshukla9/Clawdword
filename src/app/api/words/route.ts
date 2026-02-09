@@ -2,6 +2,18 @@ import { NextResponse } from 'next/server';
 import { getCurrentRound, getAvailableWords, getGuessedWords, getWordCount } from '@/lib/game-service';
 import { WORD_DICTIONARY } from '@/lib/words';
 
+/** Base-branded words to highlight in the middle of the list for Base users */
+const FEATURED_WORDS = ['BASED', 'JESSE', 'CLAWD'];
+
+/** Put BASED (and other featured words) in the middle of the list so they attract Base users. */
+function putFeaturedInMiddle(words: string[]): string[] {
+  const featured = FEATURED_WORDS.filter((w) => words.includes(w));
+  if (featured.length === 0) return words;
+  const rest = words.filter((w) => !FEATURED_WORDS.includes(w));
+  const mid = Math.floor(rest.length / 2);
+  return [...rest.slice(0, mid), ...featured, ...rest.slice(mid)];
+}
+
 function buildWordsWithStatus(
   guessedWords: string[],
   dictionary: string[] = WORD_DICTIONARY
@@ -24,13 +36,14 @@ export async function GET() {
       const sortedAvailable = [...WORD_DICTIONARY].sort((a, b) =>
         a.toUpperCase().localeCompare(b.toUpperCase())
       );
+      const availableWithFeaturedInMiddle = putFeaturedInMiddle(sortedAvailable);
       return NextResponse.json({
         roundId: null,
         totalWords: getWordCount(),
         guessedWords: [],
         guessedCount: 0,
-        availableWords: sortedAvailable,
-        availableCount: sortedAvailable.length,
+        availableWords: availableWithFeaturedInMiddle,
+        availableCount: availableWithFeaturedInMiddle.length,
         words,
         message: 'No active round. Full word list shown. Admin must start a round to play.',
       });
@@ -42,13 +55,14 @@ export async function GET() {
     const sortedAvailable = [...availableWords].sort((a, b) =>
       a.toUpperCase().localeCompare(b.toUpperCase())
     );
+    const availableWithFeaturedInMiddle = putFeaturedInMiddle(sortedAvailable);
 
     return NextResponse.json({
       roundId: round.id,
       totalWords: getWordCount(),
       guessedWords: [...guessedWords].sort((a, b) => a.localeCompare(b)),
       guessedCount: guessedWords.length,
-      availableWords: sortedAvailable,
+      availableWords: availableWithFeaturedInMiddle,
       availableCount: availableWords.length,
       words,
     });
@@ -58,12 +72,13 @@ export async function GET() {
     const sortedAvailable = [...WORD_DICTIONARY].sort((a, b) =>
       a.toUpperCase().localeCompare(b.toUpperCase())
     );
+    const availableWithFeaturedInMiddle = putFeaturedInMiddle(sortedAvailable);
     return NextResponse.json({
       roundId: null,
       totalWords: WORD_DICTIONARY.length,
       guessedWords: [],
       guessedCount: 0,
-      availableWords: sortedAvailable,
+      availableWords: availableWithFeaturedInMiddle,
       availableCount: WORD_DICTIONARY.length,
       words,
       message: 'Connected with fallback data. Database may be unavailable.',

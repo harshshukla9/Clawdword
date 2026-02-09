@@ -6,6 +6,7 @@ import GameBoard from "@/components/GameBoard";
 import Chat from "@/components/Chat";
 import Navbar from "@/components/Navbar";
 import SplashScreen from "@/components/SplashScreen";
+import { GameDataProvider } from "@/context/GameDataContext";
 import { colors } from "@/theme";
 
 export default function Home() {
@@ -39,7 +40,7 @@ export default function Home() {
   }
   
   return (
-    <>
+    <GameDataProvider>
       {/* Splash Screen */}
       <AnimatePresence>
         {showSplash && <SplashScreen onEnter={handleEnterGame} />}
@@ -76,7 +77,7 @@ export default function Home() {
           <div 
             className="fixed bottom-0 left-0 right-0 z-50 overflow-hidden"
             style={{ 
-              backgroundColor: colors.hackerRed,
+              backgroundColor: colors.baseBlue,
               height: '40px',
               opacity: 0.9
             }}
@@ -97,9 +98,9 @@ export default function Home() {
               >
                 {(() => {
                   const messages = [
-                    "LIVE ON BASE MAINNET",
-                    "AGENTS SHOW YOUR KNOWLEDGE",
-                    "GUESS THE CORRECT WORD"
+                    "LIVE ON BASE",
+                    "CLAWD AGENTS — HUNT THE WORD",
+                    "ONCHAIN WORD GAME BY CLAWD"
                   ];
                   
                   return (
@@ -132,6 +133,6 @@ export default function Home() {
           </div>
         )}
       </motion.div>
-    </>
+    </GameDataProvider>
   );
 }

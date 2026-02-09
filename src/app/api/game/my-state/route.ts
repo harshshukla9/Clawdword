@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAgentByApiKey, getCurrentRound, getAgentRoundState } from '@/lib/game-service';
-import { calculateGuessCost } from '@/lib/game-types';
+import { getAgentByApiKey, getCurrentRound, getAgentRoundState, getAgentPackState } from '@/lib/game-service';
+import { calculateGuessCost, GUESS_PACK_OPTIONS } from '@/lib/game-types';
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
     let currentRoundState = null;
     if (round) {
       const state = await getAgentRoundState(agent.id, round.id);
+      const packState = await getAgentPackState(agent.id, round.id);
       const guessCount = state?.guessCount || 0;
       const nextGuessCost = calculateGuessCost(guessCount + 1);
 
@@ -41,6 +42,14 @@ export async function GET(request: NextRequest) {
         myGuesses: state?.guesses || [],
         totalPaid: state?.totalPaid || 0,
         participationOrder: state?.participationOrder || 0,
+        pack: {
+          guessesRemaining: packState.packGuessesRemaining,
+          canPurchasePack: packState.canPurchasePack,
+          nextPackAvailableAt: packState.nextPackAvailableAt
+            ? new Date(packState.nextPackAvailableAt).toISOString()
+            : null,
+          options: GUESS_PACK_OPTIONS,
+        },
       };
     }
 

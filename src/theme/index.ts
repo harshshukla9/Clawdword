@@ -1,37 +1,40 @@
 /**
- * Essential Theme Configuration for Accuracy.Fun
- * 
- * This file contains all theme-related constants and configurations
- * used throughout the application.
+ * Theme Configuration for ClawdWord
+ * Base-specific palette (Base Blue, Cerulean, Base black)
  */
 
 // ============================================================================
-// COLOR PALETTE
+// COLOR PALETTE - Base blockchain theme
 // ============================================================================
 
 export const colors = {
-  // Primary colors
-  background: "#000000",
+  // Primary colors (Base brand: black #0a0b0d)
+  background: "#0a0b0d",
   foreground: "#ffffff",
-  
-  // Brand colors - Red hacker theme
-  somniaPurple: "#ff0040", // Bright red
-  monadPurple: "#ff0040", // Alias for backward compatibility
-  hackerRed: "#ff0040",
-  hackerRedDark: "#cc0033",
-  hackerRedLight: "#ff3366",
-  hackerRedGlow: "#ff0040",
-  
-  // UI colors - Dark with red accents
-  cardBg: "#0a0a0a",
-  cardBorder: "#1a0000",
-  cardBorderGlow: "#ff0040",
-  muted: "#666666",
-  textSecondary: "#999999",
-  
-  // Cyberpunk accents
-  cyberBlue: "#00d4ff",
-  cyberGreen: "#00ff41",
+
+  // Base brand colors - Base Blue (#0000ff), Cerulean (#3c8aff)
+  baseBlue: "#0000ff",
+  baseBlueDark: "#0000cc",
+  baseBlueLight: "#3c8aff",
+  baseBlueGlow: "#3c8aff",
+  // Aliases for components that reference these
+  somniaPurple: "#0000ff",
+  monadPurple: "#0000ff",
+  hackerRed: "#0000ff",
+  hackerRedDark: "#0000cc",
+  hackerRedLight: "#3c8aff",
+  hackerRedGlow: "#3c8aff",
+
+  // UI colors - Dark with Base blue accents
+  cardBg: "#0f1114",
+  cardBorder: "#1a1d24",
+  cardBorderGlow: "#0000ff",
+  muted: "#5b616e",
+  textSecondary: "#717886",
+
+  // Accents (Base secondary palette)
+  cyberBlue: "#3c8aff",
+  cyberGreen: "#66c800",
 } as const;
 
 // ============================================================================
@@ -39,7 +42,7 @@ export const colors = {
 // ============================================================================
 
 export const rainbowKitTheme = {
-  accentColor: colors.hackerRed,
+  accentColor: colors.baseBlue,
   accentColorForeground: "white",
   borderRadius: "large" as const,
   fontStack: "system" as const,
@@ -53,6 +56,9 @@ export const rainbowKitTheme = {
 export const cssVariables = {
   "--background": colors.background,
   "--foreground": colors.foreground,
+  "--base-blue": colors.baseBlue,
+  "--base-blue-dark": colors.baseBlueDark,
+  "--base-blue-light": colors.baseBlueLight,
   "--somnia-purple": colors.somniaPurple,
   "--monad-purple": colors.monadPurple,
   "--hacker-red": colors.hackerRed,
@@ -110,7 +116,7 @@ export const layout = {
   backgroundGlow: {
     height: "500px",
     blur: "120px",
-    opacity: 0.05, // bg-monad-purple/5
+    opacity: 0.06, // Base blue glow
   },
 } as const;
 

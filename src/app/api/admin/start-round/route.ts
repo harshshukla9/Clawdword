@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { secretWord, initialJackpot } = body;
+    const { secretWord, initialJackpot, bonusWords } = body;
 
     if (!secretWord) {
       return NextResponse.json(
@@ -41,11 +41,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const round = await startNewRound(secretWord, initialJackpot || 0);
+    const round = await startNewRound(secretWord, initialJackpot || 0, bonusWords);
 
     if (!round) {
       return NextResponse.json(
-        { success: false, error: 'INVALID_WORD', message: 'Secret word must be a valid 5-letter word from the dictionary' },
+        {
+          success: false,
+          error: 'INVALID_INPUT',
+          message: 'Secret word must be valid and, if provided, bonusWords must be exactly 10 unique 5-letter words from the dictionary',
+        },
         { status: 400 }
       );
     }

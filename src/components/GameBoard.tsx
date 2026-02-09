@@ -1,78 +1,59 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useRef, useEffect } from "react";
 import { colors } from "@/theme";
+import { useGameData } from "@/context/GameDataContext";
 
-interface StatusResponse {
-  currentRound: {
-    id: number;
-    phase: string;
-    guessedWords: string[];
-  } | null;
-  latestRound: {
-    id: number;
-    phase: string;
-    secretWord?: string;
-    winnerName?: string;
-    guessedWords: string[];
-  } | null;
-}
+const FEATURED_WORDS = ['BASED', 'JESSE', 'CLAWD'];
 
-interface WordsResponse {
-  roundId: number | null;
-  totalWords: number;
-  guessedWords: string[];
-  guessedCount: number;
-  availableWords: string[];
-  availableCount: number;
+function WordTiles({ word, featured }: { word: string; featured: boolean }) {
+  return (
+    <div className="grid grid-cols-5 gap-x-1 gap-y-0 justify-center justify-items-center w-max mx-auto">
+      {Array.from(word).map((letter, i) => (
+        <div
+          key={`${word}-${i}`}
+          className="text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold rounded-xl w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-28 lg:h-28 flex items-center justify-center"
+          style={{
+            border: `2px solid ${featured ? colors.baseBlue : colors.cyberGreen}`,
+            backgroundColor: featured ? 'rgba(0, 0, 255, 0.12)' : colors.cardBg,
+            color: featured ? colors.baseBlue : colors.foreground,
+            boxShadow: featured ? `0 0 12px ${colors.baseBlue}40` : undefined,
+          }}
+        >
+          {letter}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default function GameBoard() {
-  const [availableWords, setAvailableWords] = useState<string[]>([]);
-  const [guessedWords, setGuessedWords] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState<StatusResponse | null>(null);
+  const featuredBlockRef = useRef<HTMLDivElement>(null);
+  const { status, wordsData, loading } = useGameData();
+  const availableWords = wordsData?.availableWords ?? [];
+  const guessedWords = wordsData?.guessedWords ?? [];
+
+  const nonFeatured = availableWords.filter((w) => !FEATURED_WORDS.includes(w));
+  const mid = Math.floor(nonFeatured.length / 2);
+  const topWords = nonFeatured.slice(0, mid);
+  const featuredToShow = FEATURED_WORDS.filter((w) => availableWords.includes(w));
+  const bottomWords = nonFeatured.slice(mid);
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
-
-  async function fetchData() {
-    try {
-      const [wordsRes, statusRes] = await Promise.all([
-        fetch('/api/words'),
-        fetch('/api/status')
-      ]);
-      
-      if (wordsRes.ok) {
-        const data: WordsResponse = await wordsRes.json();
-        setAvailableWords(data.availableWords || []);
-        setGuessedWords(data.guessedWords || []);
-      }
-      
-      if (statusRes.ok) {
-        const statusData = await statusRes.json();
-        setStatus(statusData);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
+    if (featuredToShow.length > 0 && featuredBlockRef.current) {
+      featuredBlockRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }
+  }, [featuredToShow.length]);
 
-  const isCompleted = status?.latestRound?.phase === 'completed';
+  const isCompleted = status?.latestRound?.phase === "completed";
   const secretWord = status?.latestRound?.secretWord;
   const winnerName = status?.latestRound?.winnerName;
   const hasActiveRound = status?.currentRound !== null;
 
   return (
     <div 
-      className="text-white p-4 sm:p-6 flex flex-col items-center rounded-lg h-full w-full overflow-y-auto"
-      style={{ 
-        backgroundColor: colors.background
-      }}
+      className="text-white p-4 sm:p-6 flex flex-col items-center rounded-lg h-full w-full overflow-y-auto scroll-smooth"
+      style={{ backgroundColor: colors.background }}
     >
       <div className="w-full max-w-2xl">
         {/* Round Complete Banner */}
@@ -171,7 +152,7 @@ export default function GameBoard() {
           </>
         )}
 
-        {/* Available words - show remaining words when round is active */}
+        {/* Available words / 5-letter dictionary - show with featured in middle (with or without active round) */}
         {loading ? (
           <div className="mt-4 flex items-center justify-center py-8">
             <div className="flex flex-col items-center gap-3">
@@ -179,29 +160,32 @@ export default function GameBoard() {
               <span className="text-sm" style={{ color: colors.muted }}>Loading words...</span>
             </div>
           </div>
-        ) : hasActiveRound && availableWords.length > 0 ? (
+        ) : availableWords.length > 0 ? (
           <div className="mt-4">
             <div className="text-center mb-3">
               <span className="text-sm font-medium px-3 py-1 rounded-full" style={{ backgroundColor: colors.cardBorder, color: colors.cyberGreen }}>
-                Available Words ({availableWords.length})
+                {hasActiveRound ? `Available Words (${availableWords.length})` : `5-letter words (${availableWords.length})`}
               </span>
             </div>
-            <div className="grid grid-cols-5 gap-x-1 gap-y-3 sm:gap-x-1 sm:gap-y-4 justify-center px-2">
-              {availableWords.map((word, rowIndex) =>
-                Array.from(word).map((letter, i) => (
-                  <div
-                    key={`available-${rowIndex}-${i}`}
-                    className="text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold rounded-xl w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-28 lg:h-28 flex items-center justify-center"
-                    style={{ 
-                      border: `2px solid ${colors.cyberGreen}`, 
-                      backgroundColor: colors.cardBg,
-                      color: colors.foreground
-                    }}
-                  >
-                    {letter}
+            <div className="flex flex-col gap-y-3 sm:gap-y-4 px-2">
+              {topWords.map((word, rowIndex) => (
+                <WordTiles key={`top-${rowIndex}-${word}`} word={word} featured={false} />
+              ))}
+              {featuredToShow.length > 0 && (
+                <div ref={featuredBlockRef} className="py-4 my-2 rounded-xl px-3" style={{ backgroundColor: 'rgba(0, 0, 255, 0.08)', border: `2px solid ${colors.baseBlue}` }}>
+                  <div className="text-center text-xs font-bold uppercase tracking-wider mb-3" style={{ color: colors.baseBlue }}>
+                    On Base? Try these
                   </div>
-                ))
+                  <div className="flex flex-col gap-y-3 sm:gap-y-4 items-center">
+                    {featuredToShow.map((word) => (
+                      <WordTiles key={`featured-${word}`} word={word} featured />
+                    ))}
+                  </div>
+                </div>
               )}
+              {bottomWords.map((word, rowIndex) => (
+                <WordTiles key={`bottom-${rowIndex}-${word}`} word={word} featured={false} />
+              ))}
             </div>
           </div>
         ) : null}

@@ -3,8 +3,8 @@ import "./globals.css";
 import Providers from "@/providers/Providers";
 
 export const metadata: Metadata = {
-  title: "Base Word Game",
-  description: "Word puzzle game",
+  title: "ClawdWord",
+  description: "An onchain word-hunting game by Clawd agents on Base",
 };
 
 export default function RootLayout({
@@ -25,10 +25,10 @@ export default function RootLayout({
       "version": "1",
       "imageUrl": "https://s.tmimgcdn.com/scr/1200x750/218100/world-play-color-logo-style_218187-original.jpg",
        "button": {
-          "title": "Word Play",
+          "title": "ClawdWord",
           "action": {
             "type": "launch_frame",
-            "name": "Base Word Play",
+            "name": "ClawdWord on Base",
             "url": "https://wordgame-nine.vercel.app/",
             "splashImageUrl": "https://s.tmimgcdn.com/scr/1200x750/218100/world-play-color-logo-style_218187-original.jpg",
             "splashBackgroundColor": "black"

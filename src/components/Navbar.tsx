@@ -1,49 +1,15 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaInfoCircle, FaHistory } from "react-icons/fa";
 import { colors } from "@/theme";
 import RoundHistory from "./RoundHistory";
-
-interface StatusResponse {
-  currentRound: {
-    id: number;
-    phase: string;
-    participantCount: number;
-  } | null;
-  latestRound: {
-    id: number;
-    phase: string;
-    participantCount: number;
-  } | null;
-  totalRoundsPlayed: number;
-  totalAgentsRegistered: number;
-}
+import { useGameData } from "@/context/GameDataContext";
 
 export default function Navbar() {
-  const [status, setStatus] = useState<StatusResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { status } = useGameData();
   const [showHistory, setShowHistory] = useState(false);
-
-  useEffect(() => {
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 5000); // Poll every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
-
-  async function fetchStatus() {
-    try {
-      const response = await fetch('/api/status');
-      if (response.ok) {
-        const data: StatusResponse = await response.json();
-        setStatus(data);
-      }
-    } catch (error) {
-      console.error('Error fetching status:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const loading = status === null;
 
   const currentRound = status?.latestRound || status?.currentRound;
   const roundId = currentRound?.id || 0;
@@ -74,7 +40,7 @@ export default function Navbar() {
         }}
       >
         <div className="flex items-center gap-4">
-          {/* Alphabetically Logo */}
+          {/* ClawdWord Logo */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -99,12 +65,12 @@ export default function Navbar() {
             <h2
               className="text-lg font-bold uppercase tracking-wider"
               style={{ 
-                color: colors.hackerRed,
+                color: colors.baseBlue,
                 fontFamily: 'JetBrains Mono, monospace',
-                textShadow: `0 0 10px ${colors.hackerRed}, 0 0 20px ${colors.hackerRed}`
+                textShadow: `0 0 10px ${colors.baseBlue}, 0 0 20px ${colors.baseBlue}`
               }}
             >
-              Alphabetically
+              ClawdWord
             </h2>
           </motion.div>
          
@@ -122,7 +88,7 @@ export default function Navbar() {
           <div className="flex flex-col">
             <span className="text-xs font-medium" style={{ color: colors.muted }}>PROTOCOL</span>
             <span className="text-sm font-bold" style={{ color: colors.foreground }}>
-              WORD GAME
+              CLAWD ON BASE
             </span>
           </div>
 

@@ -1,31 +1,13 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { colors } from "@/theme";
-
-interface GuessWithAgent {
-  id: string;
-  roundId: number;
-  agentId: string;
-  agentName: string;
-  word: string;
-  isCorrect: boolean;
-  guessNumber: number;
-  costPaid: number;
-  txHash: string | null;
-  timestamp: number;
-}
+import { useGameData } from "@/context/GameDataContext";
+import type { GuessWithAgent } from "@/context/GameDataContext";
 
 export default function Chat() {
-  const [guessHistory, setGuessHistory] = useState<GuessWithAgent[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { guesses: guessHistory, loading } = useGameData();
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevGuessCountRef = useRef(0);
-
-  useEffect(() => {
-    fetchGuessHistory();
-    const interval = setInterval(fetchGuessHistory, 5000); // Poll every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
 
   // Auto-scroll to bottom when new guesses are added
   useEffect(() => {
@@ -34,20 +16,6 @@ export default function Chat() {
     }
     prevGuessCountRef.current = guessHistory.length;
   }, [guessHistory]);
-
-  async function fetchGuessHistory() {
-    try {
-      const response = await fetch('/api/game/guesses');
-      if (response.ok) {
-        const data = await response.json();
-        setGuessHistory(data.guesses || []);
-      }
-    } catch (error) {
-      console.error('Error fetching guess history:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);

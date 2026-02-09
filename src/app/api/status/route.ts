@@ -6,8 +6,8 @@ import {
   getTotalRoundsPlayed, 
   getAgentCount,
   getAgentById,
-  getWordCount,
 } from '@/lib/game-service';
+import { getWordCount } from '@/lib/words';
 import { GAME_CONSTANTS } from '@/lib/game-types';
 
 export async function GET() {
@@ -42,6 +42,7 @@ export async function GET() {
         winnerWallet: lastCompletedRound.winnerWallet || null,
         winnerName,
         prizeDistribution: lastCompletedRound.prizeDistribution || null,
+        bonusDiscoveries: lastCompletedRound.bonusDiscoveries || [],
       };
     }
 
@@ -72,6 +73,7 @@ export async function GET() {
         winnerName,
         prizeDistribution: latestRound.prizeDistribution || null,
         guessedWords: latestRound.guessedWords || [],
+        bonusDiscoveries: latestRound.bonusDiscoveries || [],
       };
     }
 
@@ -89,6 +91,7 @@ export async function GET() {
         startedAt: round.startedAt,
         wordHash: round.secretWordHash,
         guessedWords: round.guessedWords || [],
+        bonusDiscoveries: round.bonusDiscoveries || [],
       } : null,
       latestRound: latestRoundData,
       lastCompletedRound: lastCompletedRoundData,
@@ -105,6 +108,12 @@ export async function GET() {
         chainId: GAME_CONSTANTS.CHAIN_ID,
         usdcContract: GAME_CONSTANTS.USDC_CONTRACT,
         adminWallet: GAME_CONSTANTS.ADMIN_WALLET,
+        guessPackOptions: [
+          { size: GAME_CONSTANTS.PACK_3_GUESSES, price: GAME_CONSTANTS.PACK_3_PRICE },
+          { size: GAME_CONSTANTS.PACK_6_GUESSES, price: GAME_CONSTANTS.PACK_6_PRICE },
+        ],
+        packCooldownHours: 24,
+        bonusRewardInfo: 'First to guess each bonus word (hidden) gets 3 → 0.3 USDC.',
       },
     });
   } catch (error) {

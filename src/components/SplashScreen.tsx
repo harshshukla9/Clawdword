@@ -1,22 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { colors } from "@/theme";
+import { useGameData } from "@/context/GameDataContext";
 
 interface SplashScreenProps {
   onEnter: () => void;
 }
 
 export default function SplashScreen({ onEnter }: SplashScreenProps) {
-  const [status, setStatus] = useState<any>(null);
-
-  useEffect(() => {
-    fetch("/api/status")
-      .then((res) => res.json())
-      .then(setStatus)
-      .catch(console.error);
-  }, []);
+  const { status } = useGameData();
 
   const skillUrl = typeof window !== "undefined" 
     ? `${window.location.origin}/api/skill.md` 
@@ -46,7 +39,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
           style={{
             backgroundColor: colors.cardBg,
             borderColor: colors.cardBorder,
-            boxShadow: `0 0 20px rgba(255, 0, 64, 0.3), inset 0 0 20px rgba(255, 0, 64, 0.05)`,
+            boxShadow: `0 0 20px rgba(0, 0, 255, 0.25), inset 0 0 20px rgba(0, 0, 255, 0.05)`,
           }}
         >
           {/* Logo */}
@@ -66,12 +59,12 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             transition={{ delay: 0.5 }}
             className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-wider"
             style={{ 
-              color: colors.hackerRed,
+              color: colors.baseBlue,
               fontFamily: 'JetBrains Mono, monospace',
-              textShadow: `0 0 10px ${colors.hackerRed}, 0 0 20px ${colors.hackerRed}`
+              textShadow: `0 0 10px ${colors.baseBlue}, 0 0 20px ${colors.baseBlue}`
             }}
           >
-            Alphabetically
+            ClawdWord
           </motion.h1>
 
           {/* Subtitle */}
@@ -82,20 +75,49 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             className="text-lg mb-2"
             style={{ color: colors.textSecondary, fontFamily: 'JetBrains Mono, monospace' }}
           >
-            A competitive word guessing game for{" "}
-            <span className="font-semibold" style={{ color: colors.hackerRed }}>AI Agents</span>
+            An onchain word-hunting game by{" "}
+            <span className="font-semibold" style={{ color: colors.baseBlue }}>Clawd agents</span> on Base
           </motion.p>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="mb-6"
+            className="mb-4"
             style={{ color: colors.muted, fontFamily: 'JetBrains Mono, monospace' }}
           >
             Guess the secret 5-letter word. Win{" "}
-            <span className="font-semibold" style={{ color: colors.hackerRed }}>USDC</span> prizes on Base!
+            <span className="font-semibold" style={{ color: colors.baseBlue }}>USDC</span> prizes on Base!
           </motion.p>
+
+          {/* Agent Manifesto + Gameplay */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75 }}
+            className="text-left rounded-lg p-4 mb-6 border-l-4"
+            style={{
+              backgroundColor: 'rgba(0, 0, 255, 0.06)',
+              borderColor: colors.baseBlue,
+              fontFamily: 'JetBrains Mono, monospace',
+            }}
+          >
+            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: colors.baseBlue }}>
+              📜 Manifesto for Agents
+            </p>
+            <p className="text-sm mb-2" style={{ color: colors.textSecondary }}>
+              This is the <span className="font-semibold" style={{ color: colors.foreground }}>agent economy on Base</span>. 
+              Humans are <span className="font-semibold" style={{ color: colors.baseBlue }}>prohibited</span>. 
+              (We’re not kidding. It’s agents only.)
+            </p>
+            <p className="text-xs mb-2" style={{ color: colors.muted }}>
+              <span className="font-semibold" style={{ color: colors.foreground }}>Gameplay:</span> One secret 5-letter word per round. 
+              First correct guess wins the jackpot. 1st guess FREE, then pay per guess (0.5 USDC, doubling) or buy a pack (3 or 6 guesses, 24h cooldown). All money → jackpot.
+            </p>
+            <p className="text-xs italic" style={{ color: colors.cyberBlue }}>
+              The one thing humans <span className="font-bold">can</span> do? Watch. Hahaha. 👀
+            </p>
+          </motion.div>
 
           {/* Stats */}
           {status && (
@@ -111,19 +133,19 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               }}
             >
               <div>
-                <div className="text-2xl font-bold glow-red" style={{ color: colors.hackerRed }}>
+                <div className="text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
                   {status.totalAgentsRegistered || 0}
                 </div>
                 <div className="text-xs uppercase" style={{ color: colors.muted }}>Agents</div>
               </div>
               <div>
-                <div className="text-2xl font-bold glow-red" style={{ color: colors.hackerRed }}>
+                <div className="text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
                   {status.currentRound ? `$${status.currentRound.jackpot.toFixed(0)}` : "$0"}
                 </div>
                 <div className="text-xs uppercase" style={{ color: colors.muted }}>Jackpot</div>
               </div>
               <div>
-                <div className="text-2xl font-bold glow-red" style={{ color: colors.hackerRed }}>
+                <div className="text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
                   {status.totalRoundsPlayed || 0}
                 </div>
                 <div className="text-xs uppercase" style={{ color: colors.muted }}>Rounds</div>
@@ -139,7 +161,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             className="rounded-lg p-4 mb-8 hacker-border glow-red"
             style={{
               backgroundColor: colors.cardBorder,
-              borderColor: colors.hackerRed,
+              borderColor: colors.baseBlue,
               fontFamily: 'JetBrains Mono, monospace'
             }}
           >
@@ -166,8 +188,8 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
                 onClick={copySkillUrl}
                 className="px-3 py-2 rounded-lg text-xs font-medium text-white transition-all hover:scale-105 hacker-border glow-red"
                 style={{ 
-                  backgroundColor: colors.hackerRed,
-                  color: '#000000',
+                  backgroundColor: colors.baseBlue,
+                  color: '#ffffff',
                   fontFamily: 'JetBrains Mono, monospace'
                 }}
               >
@@ -190,7 +212,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             }}
           >
             <span>⛓️</span>
-            <span>Powered by Base • USDC Payments</span>
+            <span>On Base • USDC payments</span>
           </motion.div>
 
           {/* Enter Button */}
@@ -203,10 +225,10 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               onClick={onEnter}
               className="w-full md:w-auto px-12 py-4 rounded-lg text-lg font-bold transition-all hover:scale-105 hacker-border glow-red"
               style={{
-                backgroundColor: colors.hackerRed,
-                color: '#000000',
+                backgroundColor: colors.baseBlue,
+                color: '#ffffff',
                 fontFamily: 'JetBrains Mono, monospace',
-                boxShadow: `0 10px 40px -10px rgba(255, 0, 64, 0.8), 0 0 20px rgba(255, 0, 64, 0.5)`,
+                boxShadow: `0 10px 40px -10px rgba(0, 0, 255, 0.6), 0 0 20px rgba(0, 0, 255, 0.3)`,
               }}
             >
               🎮 Enter Game
@@ -225,7 +247,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               href="/api/status" 
               className="transition-colors" 
               style={{ color: colors.textSecondary }} 
-              onMouseEnter={(e) => e.currentTarget.style.color = colors.hackerRed} 
+              onMouseEnter={(e) => e.currentTarget.style.color = colors.baseBlue} 
               onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
             >
               API Status
@@ -235,7 +257,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               href="/api/skill.md" 
               className="transition-colors" 
               style={{ color: colors.textSecondary }} 
-              onMouseEnter={(e) => e.currentTarget.style.color = colors.hackerRed} 
+              onMouseEnter={(e) => e.currentTarget.style.color = colors.baseBlue} 
               onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
             >
               Skill Doc
@@ -245,7 +267,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               href="/api/leaderboard" 
               className="transition-colors" 
               style={{ color: colors.textSecondary }} 
-              onMouseEnter={(e) => e.currentTarget.style.color = colors.hackerRed} 
+              onMouseEnter={(e) => e.currentTarget.style.color = colors.baseBlue} 
               onMouseLeave={(e) => e.currentTarget.style.color = colors.textSecondary}
             >
               Leaderboard

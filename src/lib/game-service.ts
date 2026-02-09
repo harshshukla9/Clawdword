@@ -3,10 +3,16 @@ import {
   Agent,
   Round,
   Guess,
+  GuessPackPurchase,
   AgentRoundState,
   PrizeDistribution,
+  BonusDiscovery,
   GAME_CONSTANTS,
+  getPackPrice,
+  isValidPackSize,
   calculateGuessCost,
+  getBonusRewardForOrder,
+  isBonusWordForRound,
   generateApiKey,
   generateAgentId,
   hashWord,
@@ -112,22 +118,37 @@ export async function getTotalRoundsPlayed(): Promise<number> {
   return db.collection(COLLECTIONS.ROUNDS).countDocuments();
 }
 
-export async function startNewRound(secretWord: string, initialJackpot: number = 0): Promise<Round | null> {
+export async function startNewRound(
+  secretWord: string,
+  initialJackpot: number = 0,
+  bonusWords?: string[]
+): Promise<Round | null> {
   const { db } = await connectToDatabase();
-  
-  // Validate word
+
   const normalizedWord = secretWord.toUpperCase().trim();
   if (!WORD_DICTIONARY.includes(normalizedWord)) {
     return null;
   }
 
-  // End any existing active round
+  let normalizedBonusWords: string[] = [];
+  if (bonusWords && Array.isArray(bonusWords)) {
+    const seen = new Set<string>();
+    for (const w of bonusWords) {
+      const u = (w || '').toUpperCase().trim();
+      if (u.length !== 5 || !WORD_DICTIONARY.includes(u) || seen.has(u)) continue;
+      seen.add(u);
+      normalizedBonusWords.push(u);
+    }
+    if (normalizedBonusWords.length !== GAME_CONSTANTS.BONUS_WORDS_COUNT) {
+      return null;
+    }
+  }
+
   await db.collection(COLLECTIONS.ROUNDS).updateMany(
     { phase: 'active' },
     { $set: { phase: 'completed', endedAt: Date.now() } }
   );
 
-  // Get next round ID
   const lastRound = await db.collection(COLLECTIONS.ROUNDS).findOne(
     {},
     { sort: { id: -1 } }
@@ -145,6 +166,8 @@ export async function startNewRound(secretWord: string, initialJackpot: number =
     participantCount: 0,
     totalGuesses: 0,
     guessedWords: [],
+    bonusWords: normalizedBonusWords.length > 0 ? normalizedBonusWords : undefined,
+    bonusDiscoveries: [],
   };
 
   await db.collection(COLLECTIONS.ROUNDS).insertOne(round);
@@ -168,6 +191,114 @@ export async function endRound(reason?: string): Promise<Round | null> {
   );
 
   return { ...round, phase: 'completed', endedAt: Date.now() };
+}
+
+// ============================================================================
+// GUESS PACK OPERATIONS
+// ============================================================================
+
+export async function getAgentPackState(
+  agentId: string,
+  roundId: number
+): Promise<{
+  packGuessesRemaining: number;
+  lastPackPurchasedAt: number | null;
+  canPurchasePack: boolean;
+  nextPackAvailableAt: number | null;
+}> {
+  const { db } = await connectToDatabase();
+  const now = Date.now();
+  const cooldownEnd = now - GAME_CONSTANTS.PACK_COOLDOWN_MS;
+
+  // Active pack for this round (guesses remaining)
+  const activePack = await db.collection(COLLECTIONS.GUESS_PACKS).findOne(
+    { agentId, roundId, guessesRemaining: { $gt: 0 } },
+    { sort: { purchasedAt: -1 } }
+  ) as GuessPackPurchase | null;
+
+  // Last pack purchase by this agent (any round) for cooldown
+  const lastPurchase = await db.collection(COLLECTIONS.GUESS_PACKS).findOne(
+    { agentId },
+    { sort: { purchasedAt: -1 } }
+  ) as GuessPackPurchase | null;
+
+  const packGuessesRemaining = activePack?.guessesRemaining ?? 0;
+  const lastPackPurchasedAt = lastPurchase?.purchasedAt ?? null;
+  const nextPackAvailableAt =
+    lastPackPurchasedAt != null && lastPackPurchasedAt > cooldownEnd
+      ? lastPackPurchasedAt + GAME_CONSTANTS.PACK_COOLDOWN_MS
+      : null;
+  const canPurchasePack = nextPackAvailableAt == null || now >= nextPackAvailableAt;
+
+  return {
+    packGuessesRemaining,
+    lastPackPurchasedAt,
+    canPurchasePack,
+    nextPackAvailableAt,
+  };
+}
+
+function generatePackId(): string {
+  return `pack_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`;
+}
+
+export async function purchasePack(
+  agentId: string,
+  roundId: number,
+  packSize: 3 | 6,
+  txHash: string
+): Promise<{ success: boolean; error?: string; pack?: GuessPackPurchase }> {
+  const { db } = await connectToDatabase();
+
+  if (!isValidPackSize(packSize)) {
+    return { success: false, error: 'Invalid pack size. Use 3 or 6.' };
+  }
+
+  const amount = getPackPrice(packSize)!;
+  const round = await getCurrentRound();
+  if (!round || round.phase !== 'active' || round.id !== roundId) {
+    return { success: false, error: 'No active round or round mismatch.' };
+  }
+
+  const packState = await getAgentPackState(agentId, roundId);
+  if (!packState.canPurchasePack) {
+    return {
+      success: false,
+      error: `Pack cooldown active. Next pack available at ${new Date(packState.nextPackAvailableAt!).toISOString()}.`,
+    };
+  }
+
+  const pack: GuessPackPurchase = {
+    id: generatePackId(),
+    agentId,
+    roundId,
+    packSize,
+    amount,
+    txHash,
+    purchasedAt: Date.now(),
+    guessesRemaining: packSize,
+  };
+
+  await db.collection(COLLECTIONS.GUESS_PACKS).insertOne(pack);
+
+  // Add pack amount to round jackpot
+  await db.collection(COLLECTIONS.ROUNDS).updateOne(
+    { id: roundId },
+    { $inc: { jackpot: amount } }
+  );
+
+  return { success: true, pack };
+}
+
+/** Decrement pack guesses for this agent/round; returns true if a guess was consumed. */
+export async function useOnePackGuess(agentId: string, roundId: number): Promise<boolean> {
+  const { db } = await connectToDatabase();
+  const result = await db.collection(COLLECTIONS.GUESS_PACKS).findOneAndUpdate(
+    { agentId, roundId, guessesRemaining: { $gt: 0 } },
+    { $inc: { guessesRemaining: -1 } },
+    { sort: { purchasedAt: -1 } }
+  );
+  return result != null;
 }
 
 // ============================================================================
@@ -210,24 +341,25 @@ export async function getAgentRoundState(agentId: string, roundId: number): Prom
 }
 
 export async function submitGuess(
-  agentId: string, 
-  word: string, 
-  txHash?: string
-): Promise<{ success: boolean; guess?: Guess; error?: string }> {
+  agentId: string,
+  word: string,
+  txHash?: string,
+  usePackGuess?: boolean
+): Promise<{ success: boolean; guess?: Guess; error?: string; bonusReward?: number }> {
   const { db } = await connectToDatabase();
-  
+
   const round = await getCurrentRound();
   if (!round || round.phase !== 'active') {
     return { success: false, error: 'No active round' };
   }
 
   const normalizedWord = word.toUpperCase().trim();
-  
+
   // Validate word
   if (normalizedWord.length !== 5) {
     return { success: false, error: 'Word must be 5 letters' };
   }
-  
+
   if (!WORD_DICTIONARY.includes(normalizedWord)) {
     return { success: false, error: 'Word not in dictionary' };
   }
@@ -242,12 +374,32 @@ export async function submitGuess(
   const guessNumber = (state?.guessCount || 0) + 1;
   const cost = calculateGuessCost(guessNumber);
 
-  // Check if payment required
-  if (cost > 0 && !txHash) {
-    return { 
-      success: false, 
-      error: `Payment of ${cost} USDC required. Provide txHash.` 
+  let costPaid = 0;
+  let usedFromPack = false;
+
+  if (guessNumber <= GAME_CONSTANTS.FREE_GUESS_COUNT) {
+    costPaid = 0;
+  } else if (usePackGuess) {
+    const packState = await getAgentPackState(agentId, round.id);
+    if (packState.packGuessesRemaining <= 0) {
+      return {
+        success: false,
+        error: 'No pack guesses remaining. Purchase a pack or pay per guess with txHash.',
+      };
+    }
+    const consumed = await useOnePackGuess(agentId, round.id);
+    if (!consumed) {
+      return { success: false, error: 'Failed to use pack guess.' };
+    }
+    costPaid = 0;
+    usedFromPack = true;
+  } else if (cost > 0 && !txHash) {
+    return {
+      success: false,
+      error: `Payment of ${cost} USDC required. Send USDC and provide txHash, or use a pack guess (usePackGuess: true) if you have pack guesses remaining.`,
     };
+  } else if (cost > 0 && txHash) {
+    costPaid = cost;
   }
 
   // Check if correct
@@ -261,22 +413,24 @@ export async function submitGuess(
     word: normalizedWord,
     isCorrect,
     guessNumber,
-    costPaid: cost,
-    txHash,
+    costPaid,
+    txHash: txHash || undefined,
+    usedFromPack: usedFromPack || undefined,
     timestamp: Date.now(),
   };
 
   await db.collection(COLLECTIONS.GUESSES).insertOne(guess);
 
-  // Update round
+  // Update round: only add to jackpot if paid (not free, not pack — pack already added on purchase)
+  const jackpotIncrement = costPaid;
   const isNewParticipant = !state;
   await db.collection(COLLECTIONS.ROUNDS).updateOne(
     { id: round.id },
     {
-      $inc: { 
-        totalGuesses: 1, 
-        jackpot: cost,
-        participantCount: isNewParticipant ? 1 : 0 
+      $inc: {
+        totalGuesses: 1,
+        jackpot: jackpotIncrement,
+        participantCount: isNewParticipant ? 1 : 0,
       },
       $push: { guessedWords: normalizedWord } as any,
     }
@@ -296,7 +450,36 @@ export async function submitGuess(
     await handleWin(round.id, agentId);
   }
 
-  return { success: true, guess };
+  let bonusReward: number | undefined;
+  if (!isCorrect && isBonusWordForRound(round, normalizedWord)) {
+    const updatedRound = await getRound(round.id) as (Round & { bonusDiscoveries?: BonusDiscovery[] }) | null;
+    const discoveries = updatedRound?.bonusDiscoveries ?? [];
+    const alreadyDiscovered = discoveries.some((b) => b.word === normalizedWord);
+    if (!alreadyDiscovered && discoveries.length < 10) {
+      const order = discoveries.length;
+      const amount = getBonusRewardForOrder(order);
+      const agent = await getAgentById(agentId);
+      const discovery: BonusDiscovery = {
+        word: normalizedWord,
+        agentId,
+        agentName: agent?.name,
+        amount,
+        order,
+        timestamp: Date.now(),
+      };
+      await db.collection(COLLECTIONS.ROUNDS).updateOne(
+        { id: round.id },
+        { $push: { bonusDiscoveries: discovery } as any }
+      );
+      await db.collection(COLLECTIONS.AGENTS).updateOne(
+        { id: agentId },
+        { $inc: { totalEarnings: amount } }
+      );
+      bonusReward = amount;
+    }
+  }
+
+  return { success: true, guess, bonusReward };
 }
 
 async function handleWin(roundId: number, winnerId: string): Promise<void> {

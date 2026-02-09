@@ -13,7 +13,51 @@ export const GAME_CONSTANTS = {
   USDC_DECIMALS: 6,
   MAX_GUESSES_PER_MINUTE: 10,
   ADMIN_WALLET: process.env.ADMIN_WALLET || '0x09Fe5ac53e9aB96755Bd550bC8AeD6b3584F526A',
+  // Guess packs: 3 guesses = 1.5 USDC, 6 guesses = 3 USDC; 1 pack per 24h cooldown
+  PACK_3_GUESSES: 3,
+  PACK_3_PRICE: 1.5,
+  PACK_6_GUESSES: 6,
+  PACK_6_PRICE: 3,
+  PACK_COOLDOWN_MS: 24 * 60 * 60 * 1000,
+  // Bonus words: admin sets 10 per round; first discovered = 3 USDC, then decreasing
+  BONUS_WORDS_COUNT: 10,
+  BONUS_FIRST_REWARD: 3,
+  BONUS_REWARD_DECREASE: 0.3,
 } as const;
+
+export const BONUS_REWARDS = (() => {
+  const arr: number[] = [];
+  for (let i = 0; i < GAME_CONSTANTS.BONUS_WORDS_COUNT; i++) {
+    arr.push(Math.max(0, GAME_CONSTANTS.BONUS_FIRST_REWARD - i * GAME_CONSTANTS.BONUS_REWARD_DECREASE));
+  }
+  return arr;
+})();
+
+/** Check if word is a bonus word for this round (admin-defined list only; not exposed to agents). */
+export function isBonusWordForRound(round: { bonusWords?: string[] }, word: string): boolean {
+  const list = round.bonusWords;
+  if (!list || list.length === 0) return false;
+  return list.includes(word.toUpperCase().trim());
+}
+
+export function getBonusRewardForOrder(orderIndex: number): number {
+  return BONUS_REWARDS[orderIndex] ?? 0;
+}
+
+export const GUESS_PACK_OPTIONS = [
+  { size: 3, price: GAME_CONSTANTS.PACK_3_PRICE },
+  { size: 6, price: GAME_CONSTANTS.PACK_6_PRICE },
+] as const;
+
+export function getPackPrice(packSize: number): number | null {
+  if (packSize === GAME_CONSTANTS.PACK_3_GUESSES) return GAME_CONSTANTS.PACK_3_PRICE;
+  if (packSize === GAME_CONSTANTS.PACK_6_GUESSES) return GAME_CONSTANTS.PACK_6_PRICE;
+  return null;
+}
+
+export function isValidPackSize(packSize: number): packSize is 3 | 6 {
+  return packSize === 3 || packSize === 6;
+}
 
 // Agent model
 export interface Agent {
@@ -44,6 +88,9 @@ export interface Round {
   totalGuesses: number;
   guessedWords: string[];
   prizeDistribution?: PrizeDistribution;
+  /** Admin-defined 10 bonus words for this round (server-only; never sent to clients to prevent cheating). */
+  bonusWords?: string[];
+  bonusDiscoveries?: BonusDiscovery[];
 }
 
 // Guess model
@@ -56,6 +103,29 @@ export interface Guess {
   guessNumber: number;
   costPaid: number;
   txHash?: string;
+  usedFromPack?: boolean;
+  timestamp: number;
+}
+
+// Guess pack purchase (3 or 6 guesses, 24h cooldown per agent)
+export interface GuessPackPurchase {
+  id: string;
+  agentId: string;
+  roundId: number;
+  packSize: 3 | 6;
+  amount: number;
+  txHash: string;
+  purchasedAt: number;
+  guessesRemaining: number;
+}
+
+// Bonus word discovery (first agent to guess a bonus word gets decreasing USDC)
+export interface BonusDiscovery {
+  word: string;
+  agentId: string;
+  agentName?: string;
+  amount: number;
+  order: number;
   timestamp: number;
 }
 
@@ -98,6 +168,12 @@ export interface RegisterResponse {
 export interface GuessRequest {
   word: string;
   txHash?: string;
+  usePackGuess?: boolean; // use one guess from purchased pack (no payment)
+}
+
+export interface PurchasePackRequest {
+  packSize: 3 | 6;
+  txHash: string;
 }
 
 export interface GuessResponse {
@@ -157,6 +233,8 @@ export interface GameStatusResponse {
     chainId: number;
     usdcContract: string;
     adminWallet: string;
+    guessPackOptions: { size: number; price: number }[];
+    packCooldownHours: number;
   };
 }
 
