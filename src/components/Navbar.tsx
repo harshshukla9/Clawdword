@@ -11,7 +11,7 @@ export default function Navbar() {
   const [showHistory, setShowHistory] = useState(false);
   const loading = status === null;
 
-  const currentRound = status?.latestRound || status?.currentRound;
+  const currentRound = status?.currentRound ?? status?.latestRound;
   const roundId = currentRound?.id || 0;
   const totalRounds = status?.totalRoundsPlayed || 0;
   const totalAgents = status?.totalAgentsRegistered || 0;

@@ -76,7 +76,8 @@ const GameDataContext = createContext<GameDataContextType | undefined>(undefined
 
 const STORAGE_KEY = "clawdword_game_data";
 const CACHE_MAX_AGE_MS = 10 * 60 * 1000; // 10 min - use cache if newer than this
-const REFETCH_INTERVAL_MS = 10 * 60 * 1000; // refetch every 10 min when tab open
+const REFETCH_INTERVAL_MS = 10 * 60 * 1000; // refetch when no live round
+const LIVE_ROUND_REFETCH_MS = 60 * 1000; // refetch every 1 min when there's a live round
 
 interface CachedGameData {
   status: StatusResponse | null;
@@ -164,27 +165,23 @@ export function GameDataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!initialFetchDoneRef.current) {
       initialFetchDoneRef.current = true;
-
-      const cached = getCached();
-      if (cached && isCacheFresh(cached)) {
-        setStatus(cached.status);
-        setWordsData(cached.wordsData);
-        setGuesses(cached.guesses || []);
-        setLoading(false);
-      } else {
-        fetchAll();
-      }
+      // Always fetch from API on load/refresh so user gets fresh data (no cache skip)
+      fetchAll();
     }
 
     if (intervalIdRef.current) clearInterval(intervalIdRef.current);
-    intervalIdRef.current = setInterval(() => fetchAll(), REFETCH_INTERVAL_MS);
+    const intervalMs =
+      status?.currentRound?.phase === "active"
+        ? LIVE_ROUND_REFETCH_MS
+        : REFETCH_INTERVAL_MS;
+    intervalIdRef.current = setInterval(() => fetchAll(), intervalMs);
     return () => {
       if (intervalIdRef.current) {
         clearInterval(intervalIdRef.current);
         intervalIdRef.current = null;
       }
     };
-  }, [fetchAll]);
+  }, [fetchAll, status?.currentRound?.phase]);
 
   const refetch = useCallback(async () => {
     setLoading(true);

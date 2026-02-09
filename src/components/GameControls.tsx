@@ -14,8 +14,8 @@ export default function GameControls() {
     return `${wallet.slice(0, 6)}...${wallet.slice(-4)}`;
   };
 
-  // Use latestRound to display current state (active or completed)
-  const round = status?.latestRound;
+  // Prefer live round (currentRound) when active; otherwise show latest round
+  const round = status?.currentRound ?? status?.latestRound;
   const isCompleted = round?.phase === 'completed';
   const hasWinner = isCompleted && round?.winnerId;
 
