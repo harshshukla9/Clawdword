@@ -56,8 +56,10 @@ export async function registerAgent(walletAddress: string, name: string): Promis
 }
 
 export async function getAgentByApiKey(apiKey: string): Promise<Agent | null> {
+  const key = (apiKey || '').trim();
+  if (!key) return null;
   const { db } = await connectToDatabase();
-  const agent = await db.collection(COLLECTIONS.AGENTS).findOne({ apiKey });
+  const agent = await db.collection(COLLECTIONS.AGENTS).findOne({ apiKey: key });
   return agent as Agent | null;
 }
 

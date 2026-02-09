@@ -6,14 +6,14 @@ export async function GET(request: NextRequest) {
   try {
     // Get API key from Authorization header
     const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
       return NextResponse.json(
         { success: false, error: 'UNAUTHORIZED', message: 'Missing Authorization header. Use: Bearer YOUR_API_KEY' },
         { status: 401 }
       );
     }
 
-    const apiKey = authHeader.slice(7);
+    const apiKey = authHeader.slice(7).trim();
     const agent = await getAgentByApiKey(apiKey);
     
     if (!agent) {
