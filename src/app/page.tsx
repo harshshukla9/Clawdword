@@ -51,51 +51,49 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: showSplash ? 0 : 1 }}
         transition={{ duration: 0.5 }}
-        className="h-screen flex flex-col" 
+        className="min-h-screen h-screen flex flex-col" 
         style={{ backgroundColor: colors.background }}
       >
         <Navbar />
-        <div className="flex-1 flex overflow-hidden mt-4">
-          {/* Left Column - Game Controls (1/4) */}
-          <div className="w-1/4 h-full">
+        <div className="flex-1 flex flex-col lg:flex-row overflow-auto lg:overflow-hidden min-h-0 mt-2 sm:mt-4 pb-12 sm:pb-14 lg:pb-0">
+          {/* Left - Game Controls: full width on mobile (stacked below board), sidebar on lg+ */}
+          <div className="w-full lg:w-1/4 flex-shrink-0 lg:min-w-0 order-2 lg:order-1 lg:h-full min-h-[280px] lg:min-h-0 border-b lg:border-b-0 border-t lg:border-t-0" style={{ borderColor: 'var(--card-border)' }}>
             <GameControls />
           </div>
           
-          {/* Middle Column - Game Board (centered) */}
-          <div className="flex-1 h-full flex items-center justify-center">
+          {/* Middle - Game Board: first on mobile, centered on desktop */}
+          <div className="flex-1 w-full min-h-[55vh] sm:min-h-[60vh] lg:min-h-0 flex items-center justify-center order-1 lg:order-2 py-4 lg:py-0">
             <GameBoard />
           </div>
           
-          {/* Right Column - Chat (1/4) */}
-          <div className="w-1/4 h-full flex">
+          {/* Right - Chat: full width on mobile, sidebar on lg+ */}
+          <div className="w-full lg:w-1/4 flex-shrink-0 lg:min-w-0 order-3 lg:h-full min-h-[240px] lg:min-h-0 border-t lg:border-t-0" style={{ borderColor: 'var(--card-border)' }}>
             <Chat />
           </div>
         </div>
         
-        {/* Sticky Moving Footer Banner */}
+        {/* Sticky Moving Footer Banner - smaller on mobile; safe area for notched devices */}
         {!showSplash && (
           <div 
-            className="fixed bottom-0 left-0 right-0 z-50 overflow-hidden"
+            className="fixed bottom-0 left-0 right-0 z-50 overflow-hidden h-8 sm:h-10 pb-[env(safe-area-inset-bottom)]"
             style={{ 
               backgroundColor: colors.baseBlue,
-              height: '40px',
               opacity: 0.9
             }}
           >
             <div className="flex items-center h-full overflow-hidden relative">
-              <div 
-                className="flex items-center gap-8 whitespace-nowrap"
-                style={{
-                  animation: 'scroll 25s linear infinite',
-                  fontFamily: 'JetBrains Mono, monospace',
-                  fontSize: '14px',
-                  fontWeight: 'bold',
-                  color: colors.foreground,
-                  letterSpacing: '0.1em',
-                  display: 'flex',
-                  width: 'max-content'
-                }}
-              >
+            <div 
+              className="flex items-center gap-4 sm:gap-8 whitespace-nowrap text-xs sm:text-sm"
+              style={{
+                animation: 'scroll 25s linear infinite',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontWeight: 'bold',
+                color: colors.foreground,
+                letterSpacing: '0.1em',
+                display: 'flex',
+                width: 'max-content'
+              }}
+            >
                 {(() => {
                   const messages = [
                     "LIVE ON BASE",

@@ -79,12 +79,12 @@ export default function RoundHistory({ isOpen, onClose }: RoundHistoryProps) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 overflow-auto"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-4xl max-h-[90vh] rounded-lg overflow-hidden hacker-border"
+        className="w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] rounded-lg overflow-hidden hacker-border flex flex-col"
         style={{ 
           backgroundColor: colors.cardBg,
           borderColor: colors.hackerRed,
@@ -94,32 +94,33 @@ export default function RoundHistory({ isOpen, onClose }: RoundHistoryProps) {
       >
         {/* Header */}
         <div 
-          className="flex items-center justify-between px-6 py-4 border-b"
+          className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b flex-shrink-0"
           style={{ borderColor: colors.cardBorder, backgroundColor: colors.background }}
         >
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">📜</span>
-            <h2 className="text-xl font-bold" style={{ color: colors.foreground }}>
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className="text-xl sm:text-2xl flex-shrink-0">📜</span>
+            <h2 className="text-lg sm:text-xl font-bold truncate" style={{ color: colors.foreground }}>
               Round History
             </h2>
-            <span className="text-sm px-2 py-1 rounded" style={{ backgroundColor: colors.cardBorder, color: colors.muted }}>
+            <span className="text-xs sm:text-sm px-2 py-1 rounded flex-shrink-0" style={{ backgroundColor: colors.cardBorder, color: colors.muted }}>
               {rounds.length} rounds
             </span>
           </div>
           <button
             onClick={onClose}
-            className="text-2xl hover:opacity-70 transition-opacity"
+            className="text-xl sm:text-2xl hover:opacity-70 transition-opacity p-2 min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
             style={{ color: colors.muted }}
+            aria-label="Close"
           >
             ✕
           </button>
         </div>
 
-        {/* Content */}
-        <div className="flex h-[70vh]">
+        {/* Content - column on mobile, row on md+ */}
+        <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-hidden">
           {/* Rounds List */}
           <div 
-            className="w-1/3 border-r overflow-y-auto"
+            className="w-full md:w-1/3 flex-shrink-0 border-b md:border-b-0 md:border-r overflow-y-auto max-h-[35vh] md:max-h-none"
             style={{ borderColor: colors.cardBorder }}
           >
             {loading ? (
@@ -140,7 +141,7 @@ export default function RoundHistory({ isOpen, onClose }: RoundHistoryProps) {
               rounds.map((round) => (
                 <div
                   key={round.id}
-                  className={`p-4 border-b cursor-pointer transition-all hover:opacity-80`}
+                  className={`p-3 sm:p-4 border-b cursor-pointer transition-all hover:opacity-80 active:opacity-90`}
                   style={{ 
                     borderColor: colors.cardBorder,
                     backgroundColor: selectedRound?.id === round.id ? 'rgba(255, 0, 64, 0.1)' : 'transparent',
@@ -186,7 +187,7 @@ export default function RoundHistory({ isOpen, onClose }: RoundHistoryProps) {
           </div>
 
           {/* Round Details */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6">
             {selectedRound ? (
               <div className="space-y-6">
                 {/* Round Header */}

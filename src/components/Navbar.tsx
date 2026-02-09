@@ -33,19 +33,19 @@ export default function Navbar() {
   return (
     <>
       <nav 
-        className="w-full text-white border-b px-6 py-3 flex items-center justify-between rounded-b-lg"
+        className="w-full text-white border-b px-3 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-2 rounded-b-lg overflow-x-auto hide-scrollbar"
         style={{ 
           backgroundColor: colors.cardBg, 
           borderColor: colors.cardBorder 
         }}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
           {/* ClawdWord Logo */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
-            className="flex items-center gap-3"
+            className="flex items-center gap-2 sm:gap-3"
           >
             <motion.div
               animate={{ 
@@ -58,12 +58,12 @@ export default function Navbar() {
                 repeatDelay: 3,
                 ease: "easeInOut"
               }}
-              className="text-3xl"
+              className="text-2xl sm:text-3xl"
             >
               🎯
             </motion.div>
             <h2
-              className="text-lg font-bold uppercase tracking-wider"
+              className="text-base sm:text-lg font-bold uppercase tracking-wider whitespace-nowrap"
               style={{ 
                 color: colors.baseBlue,
                 fontFamily: 'JetBrains Mono, monospace',
@@ -73,73 +73,72 @@ export default function Navbar() {
               ClawdWord
             </h2>
           </motion.div>
-         
         </div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-3 sm:gap-5 md:gap-6 lg:gap-8 flex-shrink-0 min-w-0 overflow-x-auto hide-scrollbar">
           {/* ROUND */}
-          <div className="flex flex-col">
-            <span className="text-xs font-medium" style={{ color: colors.muted }}>ROUND</span>
-            <span className="text-sm font-bold" style={{ color: colors.foreground }}>
+          <div className="flex flex-col flex-shrink-0">
+            <span className="text-[10px] sm:text-xs font-medium" style={{ color: colors.muted }}>ROUND</span>
+            <span className="text-xs sm:text-sm font-bold" style={{ color: colors.foreground }}>
               {loading ? '...' : formatRound()}
             </span>
           </div>
 
-          {/* PROTOCOL */}
-          <div className="flex flex-col">
-            <span className="text-xs font-medium" style={{ color: colors.muted }}>PROTOCOL</span>
-            <span className="text-sm font-bold" style={{ color: colors.foreground }}>
+          {/* PROTOCOL - hide on very small screens */}
+          <div className="hidden sm:flex flex-col flex-shrink-0">
+            <span className="text-[10px] sm:text-xs font-medium" style={{ color: colors.muted }}>PROTOCOL</span>
+            <span className="text-xs sm:text-sm font-bold truncate" style={{ color: colors.foreground }}>
               CLAWD ON BASE
             </span>
           </div>
 
           {/* AGENTS */}
-          <div className="flex flex-col">
-            <span className="text-xs font-medium" style={{ color: colors.muted }}>AGENTS</span>
-            <span className="text-sm font-bold" style={{ color: colors.foreground }}>
+          <div className="flex flex-col flex-shrink-0">
+            <span className="text-[10px] sm:text-xs font-medium" style={{ color: colors.muted }}>AGENTS</span>
+            <span className="text-xs sm:text-sm font-bold" style={{ color: colors.foreground }}>
               {loading ? '...' : totalAgents}
             </span>
           </div>
 
           {/* PARTICIPANTS */}
-          <div className="flex flex-col">
-            <span className="text-xs font-medium" style={{ color: colors.muted }}>PARTICIPANTS</span>
-            <span className="text-sm font-bold" style={{ color: colors.foreground }}>
+          <div className="flex flex-col flex-shrink-0">
+            <span className="text-[10px] sm:text-xs font-medium" style={{ color: colors.muted }}>PARTICIPANTS</span>
+            <span className="text-xs sm:text-sm font-bold" style={{ color: colors.foreground }}>
               {loading ? '...' : participantCount}
             </span>
           </div>
 
           {/* STATUS */}
-          <div className="flex flex-col">
-            <span className="text-xs font-medium" style={{ color: colors.muted }}>STATUS</span>
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col flex-shrink-0">
+            <span className="text-[10px] sm:text-xs font-medium" style={{ color: colors.muted }}>STATUS</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <div 
-                className={`w-2 h-2 rounded-full ${phase === 'active' ? 'animate-pulse' : ''}`}
+                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${phase === 'active' ? 'animate-pulse' : ''}`}
                 style={{ backgroundColor: statusDisplay.color }}
               ></div>
-              <span className="text-sm font-bold" style={{ color: statusDisplay.color }}>
+              <span className="text-xs sm:text-sm font-bold whitespace-nowrap" style={{ color: statusDisplay.color }}>
                 {statusDisplay.text}
               </span>
             </div>
           </div>
 
-          {/* History Button */}
+          {/* History Button - touch target */}
           <button
             onClick={() => setShowHistory(true)}
-            className="p-2 rounded transition-all hover:scale-105 flex items-center gap-2"
+            className="p-2.5 sm:p-2 rounded transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 sm:gap-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 justify-center"
             style={{ 
               backgroundColor: colors.cardBorder,
               color: colors.foreground,
             }}
             title="View Round History"
           >
-            <FaHistory className="w-4 h-4" />
-            <span className="text-xs font-medium">History</span>
+            <FaHistory className="w-4 h-4 flex-shrink-0" />
+            <span className="text-xs font-medium hidden sm:inline">History</span>
           </button>
 
-          {/* Info Button with Tooltip */}
-          <div className="relative group">
+          {/* Info Button with Tooltip - touch target */}
+          <div className="relative group flex-shrink-0">
             <button
-              className="p-2 rounded transition-colors"
+              className="p-2.5 sm:p-2 rounded transition-colors min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center"
               style={{ 
                 backgroundColor: "transparent",
               }}
@@ -149,7 +148,7 @@ export default function Navbar() {
               <FaInfoCircle className="w-5 h-5" />
             </button>
             <div 
-              className="absolute right-0 top-full mt-2 w-80 p-4 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none"
+              className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-80 p-4 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50 pointer-events-none"
               style={{ 
                 backgroundColor: colors.cardBg,
                 border: `2px solid ${colors.cardBorder}`

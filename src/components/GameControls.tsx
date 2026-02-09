@@ -22,7 +22,7 @@ export default function GameControls() {
   if (loading) {
     return (
       <div 
-        className="h-full text-white p-4 overflow-y-auto border-r rounded-r-lg flex items-center justify-center"
+        className="h-full min-h-[200px] text-white p-4 overflow-y-auto border-r-0 lg:border-r rounded-none lg:rounded-r-lg flex items-center justify-center"
         style={{ 
           backgroundColor: colors.cardBg, 
           borderColor: colors.cardBorder 
@@ -38,7 +38,7 @@ export default function GameControls() {
 
   return (
     <div 
-      className="h-full text-white p-4 overflow-y-auto border-r rounded-r-lg"
+      className="h-full min-h-0 text-white p-3 sm:p-4 overflow-y-auto border-r-0 lg:border-r rounded-none lg:rounded-r-lg"
       style={{ 
         backgroundColor: colors.cardBg, 
         borderColor: colors.cardBorder 
@@ -97,7 +97,7 @@ export default function GameControls() {
       {/* Pool Data Section */}
       {round && (
         <div className="mb-4">
-          <h2 className="text-lg font-bold mb-3" style={{ color: colors.foreground }}>
+          <h2 className="text-base sm:text-lg font-bold mb-2 sm:mb-3" style={{ color: colors.foreground }}>
             {isCompleted ? 'Last Round Stats' : 'Current Pool Stats'}
           </h2>
           <div className="space-y-3">

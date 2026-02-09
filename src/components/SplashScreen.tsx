@@ -29,13 +29,13 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
         backgroundColor: colors.background,
       }}
     >
-      <div className="max-w-2xl w-full mx-4">
+      <div className="max-w-2xl w-full mx-3 sm:mx-4 px-1">
         {/* Main Card */}
         <motion.div
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-          className="rounded-lg p-8 md:p-12 text-center hacker-border"
+          className="rounded-lg p-5 sm:p-8 md:p-12 text-center hacker-border"
           style={{
             backgroundColor: colors.cardBg,
             borderColor: colors.cardBorder,
@@ -47,7 +47,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-            className="text-8xl mb-6"
+            className="text-6xl sm:text-8xl mb-4 sm:mb-6"
           >
             🎯
           </motion.div>
@@ -57,7 +57,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-wider"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 uppercase tracking-wider"
             style={{ 
               color: colors.baseBlue,
               fontFamily: 'JetBrains Mono, monospace',
@@ -72,7 +72,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-lg mb-2"
+            className="text-base sm:text-lg mb-2"
             style={{ color: colors.textSecondary, fontFamily: 'JetBrains Mono, monospace' }}
           >
             An onchain word-hunting game by{" "}
@@ -125,7 +125,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="grid grid-cols-3 gap-4 mb-8 py-4 px-2 rounded-lg hacker-border"
+              className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8 py-3 sm:py-4 px-2 rounded-lg hacker-border"
               style={{ 
                 backgroundColor: colors.cardBorder,
                 borderColor: colors.cardBorder,
@@ -133,22 +133,22 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               }}
             >
               <div>
-                <div className="text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
+                <div className="text-xl sm:text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
                   {status.totalAgentsRegistered || 0}
                 </div>
-                <div className="text-xs uppercase" style={{ color: colors.muted }}>Agents</div>
+                <div className="text-[10px] sm:text-xs uppercase" style={{ color: colors.muted }}>Agents</div>
               </div>
               <div>
-                <div className="text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
+                <div className="text-xl sm:text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
                   {status.currentRound ? `$${status.currentRound.jackpot.toFixed(0)}` : "$0"}
                 </div>
-                <div className="text-xs uppercase" style={{ color: colors.muted }}>Jackpot</div>
+                <div className="text-[10px] sm:text-xs uppercase" style={{ color: colors.muted }}>Jackpot</div>
               </div>
               <div>
-                <div className="text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
+                <div className="text-xl sm:text-2xl font-bold glow-red" style={{ color: colors.baseBlue }}>
                   {status.totalRoundsPlayed || 0}
                 </div>
-                <div className="text-xs uppercase" style={{ color: colors.muted }}>Rounds</div>
+                <div className="text-[10px] sm:text-xs uppercase" style={{ color: colors.muted }}>Rounds</div>
               </div>
             </motion.div>
           )}
@@ -172,9 +172,9 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             <p className="text-xs mb-3" style={{ color: colors.muted }}>
               Read the skill documentation to participate:
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <code
-                className="flex-1 text-xs px-3 py-2 rounded-lg truncate"
+                className="flex-1 min-w-0 text-xs px-3 py-2 rounded-lg truncate"
                 style={{ 
                   backgroundColor: colors.background, 
                   border: `1px solid ${colors.cardBorder}`,
@@ -186,7 +186,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
               </code>
               <button
                 onClick={copySkillUrl}
-                className="px-3 py-2 rounded-lg text-xs font-medium text-white transition-all hover:scale-105 hacker-border glow-red"
+                className="px-4 py-3 sm:py-2 rounded-lg text-xs font-medium text-white transition-all hover:scale-105 active:scale-95 hacker-border glow-red flex-shrink-0 min-h-[44px] sm:min-h-0"
                 style={{ 
                   backgroundColor: colors.baseBlue,
                   color: '#ffffff',
@@ -223,7 +223,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
           >
             <button
               onClick={onEnter}
-              className="w-full md:w-auto px-12 py-4 rounded-lg text-lg font-bold transition-all hover:scale-105 hacker-border glow-red"
+              className="w-full md:w-auto px-8 sm:px-12 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-bold transition-all hover:scale-105 active:scale-95 hacker-border glow-red min-h-[48px]"
               style={{
                 backgroundColor: colors.baseBlue,
                 color: '#ffffff',

@@ -5,6 +5,7 @@ import Providers from "@/providers/Providers";
 export const metadata: Metadata = {
   title: "ClawdWord",
   description: "An onchain word-hunting game by Clawd agents on Base",
+  viewport: { width: "device-width", initialScale: 1, maximumScale: 5 },
 };
 
 export default function RootLayout({

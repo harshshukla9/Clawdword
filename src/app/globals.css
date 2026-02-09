@@ -172,19 +172,21 @@ body::before {
 
 .board {
 	display: grid;
-	grid-template-columns: repeat(5, 50px);
-	grid-gap: 5px;
+	grid-template-columns: repeat(5, minmax(40px, 50px));
+	grid-gap: 4px;
 	margin-bottom: 10px;
 }
 
 .board div {
-	width: 50px;
-	height: 50px;
+	width: 100%;
+	aspect-ratio: 1;
+	max-width: 50px;
+	max-height: 50px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border: 1px solid #ccc;
-	font-size: 36px;
+	font-size: clamp(1rem, 4vw, 36px);
 	font-weight: bold;
 	color: white;
 }
@@ -203,8 +205,8 @@ body::before {
 }
 
 #guessInput {
-	padding: 10px;
-	font-size: 24px;
+	padding: 8px 10px;
+	font-size: clamp(1rem, 5vw, 24px);
 	margin-right: 10px;
 }
 
@@ -212,22 +214,31 @@ button {
 	cursor: pointer;
 }
 
+/* Better touch targets and tap behavior on mobile */
+@media (hover: none) and (pointer: coarse) {
+	button:not(:disabled):active {
+		-webkit-tap-highlight-color: transparent;
+	}
+}
+
 .key-chart {
 	display: grid;
-	grid-template-columns: repeat(8, 30px);
-	grid-gap: 5px;
+	grid-template-columns: repeat(8, minmax(28px, 1fr));
+	grid-gap: 4px;
 	margin-top: 20px;
 }
 
 .key-chart div {
 	background: #f4f4f4;
-	width: 30px;
-	height: 30px;
+	width: 100%;
+	aspect-ratio: 1;
+	max-width: 36px;
+	max-height: 36px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border-radius: 4px;
-	font-size: 28px;
+	font-size: clamp(0.875rem, 3vw, 28px);
 	font-weight: bold;
 }
 
