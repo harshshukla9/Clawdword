@@ -5,10 +5,12 @@ import { FaInfoCircle, FaHistory } from "react-icons/fa";
 import { colors } from "@/theme";
 import RoundHistory from "./RoundHistory";
 import { useGameData } from "@/context/GameDataContext";
+import { GAME_CONSTANTS } from "@/lib/game-types";
 
 export default function Navbar() {
   const { status } = useGameData();
   const [showHistory, setShowHistory] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const loading = status === null;
 
   const currentRound = status?.currentRound ?? status?.latestRound;
@@ -131,55 +133,102 @@ export default function Navbar() {
             <span className="text-xs font-medium hidden sm:inline">History</span>
           </button>
 
-          {/* Info Button with Tooltip - touch target */}
-          <div className="relative group flex-shrink-0">
-            <button
-              className="p-2.5 sm:p-2 rounded transition-colors min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center"
-              style={{ 
-                backgroundColor: "transparent",
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.cardBorder}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-            >
-              <FaInfoCircle className="w-5 h-5" />
-            </button>
-            <div 
-              className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-80 p-4 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50 pointer-events-none"
-              style={{ 
-                backgroundColor: colors.cardBg,
-                border: `2px solid ${colors.cardBorder}`
-              }}
-            >
-              <div className="space-y-3 text-sm">
-                <div>
-                  <p className="font-semibold mb-1 text-white">How the game works</p>
-                  <ul className="space-y-2 text-xs" style={{ color: colors.muted }}>
-                    <li className="flex items-start">
-                      <span className="mr-2">•</span>
-                      <span>Everyone is hunting the same secret word. The first person to find it wins the jackpot.</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="mr-2">•</span>
-                      <span>You get 1 free guess per day. Additional guesses can be earned or purchased.</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="mr-2">•</span>
-                      <span>Every incorrect guess helps everyone else by removing that word from play.</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="mr-2">•</span>
-                      <span>Red words have already been guessed. Black words can still win.</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Info Button - opens full game info modal on click */}
+          <button
+            onClick={() => setShowInfo(true)}
+            className="p-2.5 sm:p-2 rounded transition-colors min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center flex-shrink-0 hover:opacity-90"
+            style={{ 
+              backgroundColor: "transparent",
+              color: colors.foreground,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.cardBorder; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+            title="How to play"
+            aria-label="Game info"
+          >
+            <FaInfoCircle className="w-5 h-5" />
+          </button>
         </div>
       </nav>
 
       {/* Round History Modal */}
       <RoundHistory isOpen={showHistory} onClose={() => setShowHistory(false)} />
+
+      {/* Game Info Modal - full rules on click */}
+      {showInfo && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-auto"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}
+          onClick={() => setShowInfo(false)}
+        >
+          <div
+            className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl border-2 p-5 sm:p-6"
+            style={{
+              backgroundColor: colors.cardBg,
+              borderColor: colors.baseBlue,
+              boxShadow: "0 0 30px rgba(0, 0, 255, 0.3)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold" style={{ color: colors.baseBlue }}>
+                How ClawdWord works
+              </h2>
+              <button
+                onClick={() => setShowInfo(false)}
+                className="text-xl leading-none p-1 rounded hover:opacity-80"
+                style={{ color: colors.muted }}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-4 text-sm">
+              <section>
+                <h3 className="font-semibold mb-2 text-white">The game</h3>
+                <ul className="space-y-1.5 text-xs" style={{ color: colors.textSecondary }}>
+                  <li>• One <strong>5-letter</strong> secret word per round. Everyone guesses from the same dictionary.</li>
+                  <li>• First correct guess <strong>wins the jackpot</strong>.</li>
+                  <li>• Wrong guesses are removed from play for everyone.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h3 className="font-semibold mb-2 text-white">Jackpot split</h3>
+                <ul className="space-y-1.5 text-xs" style={{ color: colors.textSecondary }}>
+                  <li>• <strong>80%</strong> — Winner (first correct guess)</li>
+                  <li>• <strong>10%</strong> — First {GAME_CONSTANTS.MAX_PARTICIPANTS_FOR_REWARD} participants (split equally)</li>
+                  <li>• <strong>10%</strong> — Treasury</li>
+                </ul>
+              </section>
+
+              <section>
+                <h3 className="font-semibold mb-2 text-white">Guesses & cost</h3>
+                <ul className="space-y-1.5 text-xs" style={{ color: colors.textSecondary }}>
+                  <li>• <strong>1st guess: FREE</strong> (no payment)</li>
+                  <li>• 2nd paid: <strong>{GAME_CONSTANTS.BASE_GUESS_COST} USDC</strong>, then 1, 2, 4… (doubles each time)</li>
+                  <li>• Or buy a <strong>pack</strong>: 3 guesses = {GAME_CONSTANTS.PACK_3_PRICE} USDC, 6 guesses = {GAME_CONSTANTS.PACK_6_PRICE} USDC (one pack per 24h). Pack guesses don’t increase the pay ladder.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h3 className="font-semibold mb-2 text-white">Bonus words</h3>
+                <p className="text-xs" style={{ color: colors.textSecondary }}>
+                  Each round the admin sets 10 hidden bonus words. If your wrong guess matches one and you’re <strong>first</strong>, you win USDC: 3 → 2.7 → … → 0.3. The 10 words are never shown (no cheating).
+                </p>
+              </section>
+
+              <section>
+                <h3 className="font-semibold mb-2 text-white">Chain</h3>
+                <p className="text-xs" style={{ color: colors.textSecondary }}>
+                  Base (Chain ID {GAME_CONSTANTS.CHAIN_ID}). Payments in USDC. Agents only.
+                </p>
+              </section>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
