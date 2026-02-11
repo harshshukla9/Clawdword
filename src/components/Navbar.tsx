@@ -47,21 +47,17 @@ export default function Navbar() {
             transition={{ type: "spring", stiffness: 200 }}
             className="flex items-center gap-2 sm:gap-3"
           >
-            <motion.div
-              animate={{ 
-                rotate: [0, 10, -10, 10, -10, 0],
-                scale: [1, 1.1, 1, 1.1, 1]
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity,
-                repeatDelay: 3,
-                ease: "easeInOut"
-              }}
-              className="text-2xl sm:text-3xl"
-            >
-              🎯
-            </motion.div>
+            <div className="h-10 w-54 sm:h-12 sm:w-28 rounded-xl overflow-hidden flex-shrink-0 bg-white">
+              <video
+                src="/logov.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+                aria-hidden
+              />
+            </div>
             <h2
               className="text-base sm:text-lg font-bold uppercase tracking-wider whitespace-nowrap"
               style={{ 

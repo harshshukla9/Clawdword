@@ -42,14 +42,24 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
             boxShadow: `0 0 20px rgba(0, 0, 255, 0.25), inset 0 0 20px rgba(0, 0, 255, 0.05)`,
           }}
         >
-          {/* Logo */}
+          {/* Logo video */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-            className="text-6xl sm:text-8xl mb-4 sm:mb-6"
+            className="mb-4 sm:mb-6 w-full"
           >
-            🎯
+            <div className="h-[10vh] bg-white w-full rounded-xl overflow-hidden">
+              <video
+                src="/logov.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+                aria-hidden
+              />
+            </div>
           </motion.div>
 
           {/* Title */}
